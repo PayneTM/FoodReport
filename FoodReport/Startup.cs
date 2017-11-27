@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using FoodReport.Models;
 
 namespace FoodReport
 {
@@ -31,6 +33,9 @@ namespace FoodReport
             services.AddTransient<IProductRepository, ProductRepo>();
             services.AddTransient<IReportRepository, ReportRepo>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            services.AddDbContext<FoodReportContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("FoodReportContext")));
 
         }
 
