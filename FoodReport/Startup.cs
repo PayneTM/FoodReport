@@ -28,7 +28,10 @@ namespace FoodReport
                 options.Database
                     = Configuration.GetSection("MongoConnection:Database").Value;
             });
-            services.AddTransient<IRepository<Product>, ProductRepo>();
+            services.AddTransient<IProductRepository, ProductRepo>();
+            services.AddTransient<IReportRepository, ReportRepo>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

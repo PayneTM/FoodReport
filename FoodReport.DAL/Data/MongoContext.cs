@@ -22,5 +22,12 @@ namespace FoodReport.DAL.Data
                 return _database.GetCollection<Product>("Products");
             }
         }
+        public IMongoCollection<Report> Reports
+        {
+            get
+            {
+                return _database.GetCollection<Report>("Reports");
+            }
+        }
     }
 }

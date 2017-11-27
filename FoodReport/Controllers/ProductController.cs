@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Interfaces;
+using FoodReport.DAL.Repos;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,11 +15,11 @@ namespace FoodReport.Controllers
     [Route("api/[controller]")]
     public class ProductController : Controller
     {
-        private readonly IRepository<Product> _noteRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductController(IRepository<Product> noteRepository)
+        public ProductController(IOptions<Settings> options)
         {
-            _noteRepository = noteRepository;
+            _unitOfWork = new UnitOfWork(options);
         }
 
         [HttpGet]
@@ -28,7 +30,7 @@ namespace FoodReport.Controllers
 
         private async Task<IEnumerable<Product>> GetProductInternal()
         {
-            return await _noteRepository.GetAll();
+            return await _unitOfWork.Products().GetAll();
         }
 
         // GET api/notes/5
@@ -40,7 +42,7 @@ namespace FoodReport.Controllers
 
         private async Task<Product> GetNoteByIdInternal(string id)
         {
-            return await _noteRepository.Get(id) ?? new Product();
+            return await _unitOfWork.Products().Get(id) ?? new Product();
         }
 
         // POST api/notes
@@ -65,7 +67,7 @@ namespace FoodReport.Controllers
         // DELETE api/notes/5
         public void Delete(string id)
         {
-            _noteRepository.Remove(id);
+            _unitOfWork.Products().Remove(id);
         }
     }
 }
