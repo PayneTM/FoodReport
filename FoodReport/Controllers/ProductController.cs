@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodReport.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/product")]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,9 +23,10 @@ namespace FoodReport.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Product>> Get()
+        public async Task<IActionResult> Index()
         {
-            return GetProductInternal();
+            var result = await GetProductInternal();
+            return View(result);
         }
 
         private async Task<IEnumerable<Product>> GetProductInternal()
@@ -34,40 +35,92 @@ namespace FoodReport.Controllers
         }
 
         // GET api/notes/5
-        [HttpGet("{id}")]
-        public Task<Product> Get(string id)
+        [Route("details")]
+        public IActionResult Details() => View();
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> Details(string id)
         {
-            return GetNoteByIdInternal(id);
+            return View( await GetNoteByIdInternal(id));
         }
 
         private async Task<Product> GetNoteByIdInternal(string id)
         {
             return await _unitOfWork.Products().Get(id) ?? new Product();
         }
-
-        // POST api/notes
-        //[HttpPost]
-        //public void Post([FromBody]string value)
-        //{
-        //    _noteRepository.Add(new Product()
-        //    {
-        //        Body = value,
-        //        CreatedOn = DateTime.Now,
-        //        UpdatedOn = DateTime.Now
-        //    });
-        //}
+        [Route("create")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        //POST api/notes
+        [HttpPost("create")]
+        public IActionResult Create([Bind("Name,Available,Unit,Price,Provider")]Product item)
+        {
+            _unitOfWork.Products().Add(item);
+            return RedirectToAction(nameof(Index));
+        }
 
         // PUT api/notes/5
-        //[HttpPut("{id}")]
-        //public void Put(string id, [FromBody]string value)
-        //{
-        //    _noteRepository.Update(id, value);
-        //}
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Edit(string id)
+
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var toEdit = await _unitOfWork.Products().Get(id);
+            if (toEdit == null)
+            {
+                return NotFound();
+            }
+            return View(toEdit);
+        }
+
+        [HttpPost("edit/{id}")]
+        public IActionResult Edit([Bind("Id,Name,Available,Unit,Price,Provider")]Product item)
+        {
+            _unitOfWork.Products().Update(item.Id,item);
+            return RedirectToAction(nameof(Index));
+        }
 
         // DELETE api/notes/5
-        public void Delete(string id)
+        //[Route("delete/{id}")]
+        //public async Task<IActionResult> Delete(string id)
+        //{
+        //    await _unitOfWork.Products().Remove(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        [Route("delete")]
+
+        public async Task<IActionResult> Delete(string id)
         {
-            _unitOfWork.Products().Remove(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var toDelete = await _unitOfWork.Products().Get(id);
+            if (toDelete == null)
+            {
+                return NotFound();
+            }
+
+            return View(toDelete);
         }
+
+        // POST: TodoListElements/Delete/5
+        [HttpPost("delete"), ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            await _unitOfWork.Products().Remove(id);
+            //    return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
