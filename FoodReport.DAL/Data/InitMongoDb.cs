@@ -1,0 +1,36 @@
+﻿using FoodReport.DAL.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FoodReport.DAL.Data
+{
+    public class InitMongoDb
+    {
+        private MongoContext _context;
+        public InitMongoDb(IOptions<Settings> options)
+        {
+            _context = new MongoContext(options);
+        }
+        public async void Init()
+        {
+            var odmen = new User
+            {
+                Email = "admin@ad",
+                Password = "admin"
+            };
+            var filter = Builders<User>.Filter.Eq("Email", odmen.Email);
+
+               var usr =  await _context.Users
+                                .Find(filter)
+                                .FirstOrDefaultAsync();
+            if (usr == null)
+            {
+                await _context.Users.InsertOneAsync(odmen);
+            }
+        }
+    }
+}

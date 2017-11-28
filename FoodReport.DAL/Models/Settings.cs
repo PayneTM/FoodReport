@@ -9,5 +9,7 @@ namespace FoodReport.DAL.Models
     {
         public string ConnectionString;
         public string Database;
+        public string Username;
+        public string Password;
     }
 }

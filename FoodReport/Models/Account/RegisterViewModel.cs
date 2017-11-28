@@ -12,7 +12,7 @@ namespace FoodReport.Models.Account
         [EmailAddress]
         public string Email { get; set; }
         [Required]
-        [StringLength(32, MinimumLength = 5, ErrorMessage = "The lenght of the password must be between 6 and 32 characters")]
+        [StringLength(32, MinimumLength = 5, ErrorMessage = "The lenght of the password must be between 5 and 32 characters")]
         public string Password { get; set; }
         [Required]
         [Compare("Password", ErrorMessage = "Wrong password confirmation")]

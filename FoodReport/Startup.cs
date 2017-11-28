@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using FoodReport.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using FoodReport.DAL.Data;
+using Microsoft.Extensions.Options;
 
 namespace FoodReport
 {
@@ -44,7 +46,7 @@ namespace FoodReport
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<Settings> options)
         {
             if (env.IsDevelopment())
             {
@@ -65,6 +67,8 @@ namespace FoodReport
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            var Db = new InitMongoDb(options);
+            Db.Init();
         }
     }
 }

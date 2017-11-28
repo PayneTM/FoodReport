@@ -14,21 +14,6 @@ namespace FoodReport.DAL.Data
             var client = new MongoClient(settings.Value.ConnectionString);
             if (client != null)
                 _database = client.GetDatabase(settings.Value.Database);
-            try
-            {
-                _database.GetCollection<User>("Users");
-            }
-            catch
-            {
-                _database.CreateCollection("Users");
-                var usrCollection = _database.GetCollection<User>("Users");
-                var odmen = new User
-                {
-                    Email = "admin@admin",
-                    Password = "admin"
-                };
-                usrCollection.InsertOne(odmen);
-            }
         }
 
         public IMongoCollection<Product> Products
