@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using FoodReport.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace FoodReport
 {
@@ -33,9 +34,11 @@ namespace FoodReport
             services.AddTransient<IProductRepository, ProductRepo>();
             services.AddTransient<IReportRepository, ReportRepo>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-            services.AddDbContext<FoodReportContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("FoodReportContext")));
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options => //CookieAuthenticationOptions
+                {
+                   options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+               });
 
         }
 

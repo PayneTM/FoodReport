@@ -9,5 +9,6 @@ namespace FoodReport.DAL.Interfaces
     {
         IProductRepository Products();
         IReportRepository Reports();
+		IUserRepo Users();
     }
 }
