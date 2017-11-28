@@ -99,5 +99,24 @@ namespace FoodReport.DAL.Repos
                 throw ex;
             }
         }
+
+        public async Task<User> Get(string email, string password)
+        {
+            var filter = Builders<User>.Filter.Eq("Email", email);
+
+            try
+            {
+                var usr = await _context.Users
+                                .Find(filter)
+                                .FirstOrDefaultAsync();
+                if (usr.Password == password) return usr;
+                return null;
+            }
+            catch 
+            {
+                // log or manage the exception
+                return null;
+            }
+        }
     }
 }

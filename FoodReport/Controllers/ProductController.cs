@@ -7,11 +7,13 @@ using FoodReport.DAL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Repos;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodReport.Controllers
 {
+    [Authorize]
     [Route("api/product")]
     public class ProductController : Controller
     {

@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FoodReport.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodReport.Controllers
 {
+
     public class HomeController : Controller
     {
         public IActionResult Index()

@@ -33,6 +33,7 @@ namespace FoodReport
             });
             services.AddTransient<IProductRepository, ProductRepo>();
             services.AddTransient<IReportRepository, ReportRepo>();
+            services.AddTransient<IUserRepo, UserRepo>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options => //CookieAuthenticationOptions
@@ -56,6 +57,7 @@ namespace FoodReport
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
