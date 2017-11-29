@@ -8,13 +8,13 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
-using FoodReport.Models.Account;
+using FoodReport.Auth.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FoodReport.Controllers
+namespace FoodReport.Auth.Controllers
 {
     [AllowAnonymous]
     public class AccountController : Controller

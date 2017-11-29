@@ -20,7 +20,8 @@ namespace FoodReport.DAL.Data
             var odmen = new User
             {
                 Email = "admin@ad",
-                Password = "admin"
+                Password = "admin",
+                Role = "Admin"
             };
             var filter = Builders<User>.Filter.Eq("Email", odmen.Email);
 

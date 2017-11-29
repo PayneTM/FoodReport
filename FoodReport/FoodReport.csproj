@@ -16,10 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FoodReport.Auth\FoodReport.Auth.csproj" />
     <ProjectReference Include="..\FoodReport.DAL\FoodReport.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Account\" />
     <Folder Include="Views\Shared\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />
