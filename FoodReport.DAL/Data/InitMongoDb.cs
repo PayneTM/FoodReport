@@ -1,10 +1,6 @@
 ﻿using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Data
 {

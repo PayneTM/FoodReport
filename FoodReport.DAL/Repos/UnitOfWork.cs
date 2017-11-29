@@ -1,10 +1,6 @@
-﻿using FoodReport.DAL.Data;
-using FoodReport.DAL.Interfaces;
+﻿using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FoodReport.DAL.Repos
 {

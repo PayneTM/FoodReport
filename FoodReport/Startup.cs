@@ -1,14 +1,12 @@
-﻿using FoodReport.DAL.Interfaces;
+﻿using FoodReport.DAL.Data;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using FoodReport.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using FoodReport.DAL.Data;
 using Microsoft.Extensions.Options;
 
 namespace FoodReport

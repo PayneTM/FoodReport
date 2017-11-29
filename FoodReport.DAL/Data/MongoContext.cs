@@ -1,5 +1,4 @@
-﻿using FoodReport.DAL.Interfaces;
-using FoodReport.DAL.Models;
+﻿using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 

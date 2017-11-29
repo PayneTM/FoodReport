@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
-using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Repos;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -88,14 +86,6 @@ namespace FoodReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // DELETE api/notes/5
-        //[Route("delete/{id}")]
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    await _unitOfWork.Products().Remove(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         [Route("delete")]
 
         public async Task<IActionResult> Delete(string id)
@@ -120,7 +110,6 @@ namespace FoodReport.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await _unitOfWork.Products().Remove(id);
-            //    return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
 

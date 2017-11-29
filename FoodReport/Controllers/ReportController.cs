@@ -135,10 +135,5 @@ namespace FoodReport.Controllers
             await _unitOfWork.Reports().Remove(id);
             return RedirectToAction(nameof(Index));
         }
-
-        //private bool ReportExists(string id)
-        //{
-        //    return _context.Report.Any(e => e.Id == id);
-        //}
     }
 }
