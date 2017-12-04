@@ -1,5 +1,46 @@
 ﻿@model FoodReport.DAL.Models.Report
+   @* <script src="~/js/fieldsAdding.js"></script>*@
 
+<script>
+    function Save(itemid) {
+        var inputs = document.getElementsByTagName("input");
+
+        var result =
+            {
+                field: [],
+                id: itemid
+            }
+        for (var i = 1; i < inputs.length; i = i + 3) {
+            var field =
+                {
+                    product: '',
+                    count: 0,
+                    price: 0
+                };
+            field.product = inputs.item(i).value;
+            field.count = inputs.item(i + 1).value;
+            field.price = inputs.item(i + 2).value;
+            result.field.push(field);
+        };
+        var leng = result.toString().length;
+        var datar = JSON.stringify(result);
+        $.ajax(
+            {
+                type: "POST",
+                url: "/api/report/edit/" + itemid,
+                data: datar,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+                //success: //function () {
+                ////    $.ajax({
+                ////        type: "GET",
+                ////        url: "all"
+                ////    });
+                ////}
+                //window.location.href = '/api/report/all'
+            });
+    }
+</script>
 @{
     ViewData["Title"] = "Details";
 }
@@ -9,40 +50,70 @@
 <div>
     <h4>Report</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Count)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Count)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalPrice)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalPrice)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Owner)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Owner)
-        </dd>
-    </dl>
+    <table class="table">
+        <thead>
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Count)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TotalPrice)
+                    </th>*@
+                <th>
+                   <label>Product</label>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Owner)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+            {
+                <tr>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalPrice)
+                        </td>*@
+                    <td>
+                        <input class="form-control" type="text" value=@item.Product />
+                       @* @Html.DisplayFor(modelItem => item.Product)*@
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" value=@item.Count />
+
+                        @*@Html.DisplayFor(modelItem => item.Count)*@
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" value=@item.Price />
+
+                        @*@Html.DisplayFor(modelItem => item.Price)*@
+                    </td>
+                    @if (Model.Owner == User.Identity.Name || User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+        </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a onclick="Save('@Model.Id')">Save</a> 
     <a asp-action="Index">Back to List</a>
 </div>

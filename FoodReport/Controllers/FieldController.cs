@@ -1,38 +1,40 @@
-﻿using FoodReport.DAL.Interfaces;
-using FoodReport.DAL.Models;
-using FoodReport.DAL.Repos;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using FoodReport.DAL.Models;
+using FoodReport.Models;
+using FoodReport.DAL.Interfaces;
+using Microsoft.Extensions.Options;
+using FoodReport.DAL.Repos;
 
 namespace FoodReport.Controllers
 {
-    [Authorize]
-    [Route("api/report/")]
-    public class ReportController : Controller
+    [Route("api/makereport/")]
+    public class FieldController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private List<Field> _fieldList;
 
-        public ReportController(IOptions<Settings> options)
+        public FieldController(IOptions<Settings> options)
         {
             _unitOfWork = new UnitOfWork(options);
+            _fieldList = new List<Field>();
         }
 
         // GET: Field
-        
-        [HttpGet("all")]
-        public async Task<IActionResult> Index()
+        [Route("")]
+        [Route("index")]
+        public IActionResult Index()
         {
-            var result = await _unitOfWork.Reports().GetAll();
-            //return View(Json(await _unitOfWork.Reports().GetAll());
-            return View(result);
+            return View(_fieldList);
         }
 
         // GET: Field/Details/5
-        [HttpGet("details/{id}")]
+        [Route("details/{id}")]
 
         public async Task<IActionResult> Details(string id)
         {
@@ -41,28 +43,32 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            var report = await _unitOfWork.Reports().Get(id) ?? new Report();
-            if (report == null)
+            var @field = _fieldList.FirstOrDefault(m => m.Id == id);
+            if (@field == null)
             {
                 return NotFound();
             }
 
-            //return Json(report);
-            return View(report);
+            return View(@field);
         }
 
         // GET: Field/Create
         [Route("create")]
+
         public IActionResult Create()
         {
             return View();
         }
 
+
+        //TODO: API Report Controller
+
+
         // POST: Field/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("create")]
-        //[ValidateAntiForgeryToken]
+        [HttpPost("Create")]
+       // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody] List<Field> @field)
         {
             if (ModelState.IsValid)
@@ -72,18 +78,18 @@ namespace FoodReport.Controllers
                     Date = DateTime.Now,
                     List = @field,
                     Owner = User.Identity.Name,
-                    Status = "Pending",
-                    isEdited = false
+                    Status = "Pending"
                 };
                 await _unitOfWork.Reports().Add(report);
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
-            return View(@field);
-            //return Json(@field);
+           // return View(@field);
+           return Json(@field);
         }
 
         // GET: Field/Edit/5
-        [HttpGet("edit/{id}")]
+        [Route("edit/{id}")]
+
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -91,30 +97,22 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            var report = await _unitOfWork.Reports().Get(id);
-            if (report == null)
+            var @field = _fieldList.FirstOrDefault(m => m.Id == id);
+            if (@field == null)
             {
                 return NotFound();
             }
-            //return Json(report);
-
-            return View(report);
+            return View(@field);
         }
 
         // POST: Field/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("edit/{id}")]
-        //[ValidateAntiForgeryToken]
-
-
-        //      expected: id, fields != null
-        //      actual: id != null, fields == null
-        // TODO: fix it!!
-        public async Task<IActionResult> Edit(string id, [FromBody] List<Field> fields)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, [Bind("Count,Price,Product,Id")] Field @field)
         {
-            var report = await _unitOfWork.Reports().Get(id);
-            if (id != report.Id)
+            if (id != @field.Id)
             {
                 return NotFound();
             }
@@ -123,31 +121,29 @@ namespace FoodReport.Controllers
             {
                 try
                 {
-
-                    report.isEdited = true;
-                    report.EditingTime = DateTime.Now;
-                    report.List = fields;
-                    await _unitOfWork.Reports().Update(id,report);
+                    var item = _fieldList.FirstOrDefault(m => m.Id == id);
+                    var index = _fieldList.IndexOf(item);
+                    _fieldList[index] = @field;
                 }
-                catch //(DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException)
                 {
-                    //if (!ReportExists(report.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
+                    if (!FieldExists(@field.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //return Json(report);
-            return View(report);
+            return View(@field);
         }
 
         // GET: Field/Delete/5
         [Route("delete/{id}")]
+
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -155,23 +151,30 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            var report = await _unitOfWork.Reports().Get(id);
-            if (report == null)
+            var @field = _fieldList.FirstOrDefault(m => m.Id == id);
+
+            if (@field == null)
             {
                 return NotFound();
             }
 
-            //return Json(report);
-            return View(report);
+            return View(@field);
         }
 
         // POST: Field/Delete/5
-        [HttpPost("delete/{id}"), ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            await _unitOfWork.Reports().Remove(id);
+            var @field = _fieldList.FirstOrDefault(m => m.Id == id);
+
+            _fieldList.Remove(@field);
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool FieldExists(string id)
+        {
+            return _fieldList.Any(e => e.Id == id);
         }
     }
 }

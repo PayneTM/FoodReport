@@ -18,7 +18,7 @@ namespace FoodReport.DAL.Repos
             _context = new MongoContext(settings);
         }
 
-        public async Task<IEnumerable<Report>> GetAll()
+        public async Task<IEnumerable<Report>> GetAll(string id = null)
         {
             try
             {

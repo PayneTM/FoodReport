@@ -12,8 +12,8 @@
             <div id="container">
                 <div id="blockInput1">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="col-sm-4">
-                        <label asp-for="Product" class="control-label" id="prod1"></label>
+                    <div class="col-sm-4" >
+                        <label asp-for="Product" class="control-label" id="prod1" ></label>
                         <input asp-for="Product" class="form-control" />
                         <span asp-validation-for="Product" class="text-danger"></span>
                     </div>
@@ -30,16 +30,11 @@
                 </div>
             </div>
         </form>
-
+                <a href="#" id="filldetails" onclick="Add()">Add</a>
+                <a onclick="Send()">Create</a>
     </div>
 </div>
 <div>
-    
-    <a href="#" id="filldetails" onclick="Add()">Add</a>
-    <br />
-    <a onclick="Send()">Create</a>
-    <br />
-
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts {

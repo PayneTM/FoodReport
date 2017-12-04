@@ -1,4 +1,17 @@
-﻿@model IEnumerable<FoodReport.DAL.Models.Report>
+﻿@*<script>
+    var datar = [];
+    $.ajax(
+        {
+            type: "GET",
+            url: "all/afdsdf",
+            data: datar,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: @Model = function () { var res = JSON.parse(data); }
+        });
+
+</script>*@
+@model IEnumerable<FoodReport.DAL.Models.Report>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +25,7 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.Count)
                 </th>
                 <th>
@@ -20,20 +33,22 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.TotalPrice)
-                </th>
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Date)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Owner)
                 </th>
-            <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Count)
             </td>
             <td>
@@ -41,7 +56,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
@@ -49,10 +64,16 @@
                 @Html.DisplayFor(modelItem => item.Owner)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @if (item.Owner == User.Identity.Name || User.IsInRole("Admin"))
+            {
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
+            }
         </tr>
 }
     </tbody>

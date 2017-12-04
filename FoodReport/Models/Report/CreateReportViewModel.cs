@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FoodReport.DAL.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoodReport.Models.Report
 {
-    public class CreateReportViewModel
+    public class CreateReportViewModel : Entity
     {
         [Required]
         public uint Count { get; set; }
