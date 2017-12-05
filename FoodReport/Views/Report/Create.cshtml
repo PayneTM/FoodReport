@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Create";
 }
-<script src="~/js/fieldsAdding.js"></script>
+<script src="~/js/ReportCreate.js"></script>
 <h2>Create</h2>
 <h4>Field</h4>
 <hr />
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label asp-for="Price" class="control-label"></label>
-                        <input asp-for="Price" class="form-control" id="price1" />
+                        <input asp-for="Price" class="form-control" id="price1" type="number"/>
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                 </div>

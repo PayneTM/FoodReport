@@ -1,5 +1,9 @@
 ﻿var counter = 2;
+var isNewRowAllowed = true;
 function Add() {
+    if (NotEmptyInputs())
+    {
+
     //make inputs
     ///////////////////////////////////////
     //Product input
@@ -17,7 +21,7 @@ function Add() {
     //////////////////////////////////////
     var input2 = document.createElement("input");
     input2.className = "form-control";
-    input2.type = "text";
+    input2.type = "number";
     input2.id = "count" + counter;
     input2.placeholder = "Count";
 
@@ -27,7 +31,7 @@ function Add() {
     //////////////////////////////////////
     var input3 = document.createElement("input");
     input3.className = "form-control";
-    input3.type = "text";
+    input3.type = "number";
     input3.id = "price" + counter;
     input3.placeholder = "Price";
 
@@ -35,15 +39,19 @@ function Add() {
     //make divs for inputs
     var divinput1 = document.createElement("div");
     divinput1.className = "col-sm-4";
+    divinput1.style.paddingTop = "5px";
     divinput1.appendChild(input1);
-    divinput1.appendChild
 
     var divinput2 = document.createElement("div");
     divinput2.className = "col-sm-4";
+    divinput2.style.paddingTop = "5px";
+
     divinput2.appendChild(input2);
 
     var divinput3 = document.createElement("div");
     divinput3.className = "col-sm-4";
+    divinput3.style.paddingTop = "5px";
+
     divinput3.appendChild(input3);
 
 
@@ -52,13 +60,32 @@ function Add() {
 
     var block = document.createElement("div");
     block.id = "blockInput" + counter;
-
-
+    block.appendChild(document.createElement("br"));
     block.appendChild(divinput1);
     block.appendChild(divinput2);
     block.appendChild(divinput3);
     cont.appendChild(block);
     counter++;
+    }
+}
+
+function NotEmptyInputs()
+{
+    var OK = true;
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 1; i != inputs.length; i++)
+    {
+        if (inputs.item(i).value.length == 0)
+        {
+            inputs.item(i).style.borderColor = "red";
+            OK = false;
+        }
+        else
+        {
+            inputs.item(i).style.borderColor = "silver";
+        }
+    };
+    return OK;
 }
 
 function Send() {
@@ -86,12 +113,6 @@ function Send() {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: //function () {
-            //    $.ajax({
-            //        type: "GET",
-            //        url: "all"
-            //    });
-            //}
-            window.location.href = 'all'
+            success: window.location.href = '/api/report/all'
         });
 }

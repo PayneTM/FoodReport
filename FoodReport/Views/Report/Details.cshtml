@@ -1,130 +1,5 @@
 ﻿@model FoodReport.DAL.Models.Report
-@* <script src="~/js/fieldsAdding.js"></script>*@
-
-<script>
-    function Save(itemid) {
-        var inputs = document.getElementsByTagName("input");
-
-        var result =
-            {
-                list: [],
-                id: itemid
-            };
-        for (var i = 1; i < inputs.length; i = i + 3) {
-            var field =
-                {
-                    product: '',
-                    count: 0,
-                    price: 0
-                };
-            field.product = inputs.item(i).value;
-            field.count = inputs.item(i + 1).value;
-            field.price = inputs.item(i + 2).value;
-            result.list.push(field);
-        };
-        var leng = result.toString().length;
-        var datar = JSON.stringify(result);
-        $.ajax(
-            {
-                type: "POST",
-                url: "/api/report/edit/" + itemid,
-                data: datar,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-    }
-    function Approve(userid, admin)
-    {
-        var result =
-            {
-                id: userid,
-                status: "Approved",
-                reason: null,
-                adminName: admin
-            };
-        var datar = JSON.stringify(result);
-        $.ajax(
-            {
-                type: "POST",
-                url: "/api/report/approve/" + userid,
-                data: datar,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: window.location.href = '/api/report/details/' + userid
-            });
-    }
-    function RejectForm(userid, admin)
-    {
-        var global = document.getElementById("rej");
-        var divv = document.createElement("div");
-
-        var textarea = document.createElement("textarea");
-        textarea.id = "reason";
-        var labeel = document.createElement("label");
-        labeel.htmlFor = "reason";
-        labeel.innerHTML = "Reason"
-        var wtf = textarea.value;
-
-        @*var arguments = (@Model.Id.ToString() + ',' + @User.Identity.Name.ToString() + ',' + wtf);
-
-        var extradiv = document.createElement("div");
-        extradiv.innerHTML = "<a onclick='GG(" + arguments + ")> Reject</a>";*@
-
-        var send = document.createElement("a");
-        send.innerHTML = "Reject";
-        send.onclick = function () {
-            GG();
-        };
-
-        divv.appendChild(labeel);
-        divv.appendChild(document.createElement("br"));
-        divv.appendChild(textarea);
-        divv.appendChild(document.createElement("br"));
-        divv.appendChild(send);
-        global.appendChild(divv);
-    //function GG(userid, admin, reason)
-    //{
-    //        var result =
-    //            {
-    //                id: userid,
-    //                status: "Rejected",
-    //                reason: reason,
-    //                adminName: admin
-    //            };
-    //        var datar = JSON.stringify(result);
-    //        $.ajax(
-    //            {
-    //                type: "POST",
-    //                url: "/api/report/approve/" + userid,
-    //                data: datar,
-    //                contentType: "application/json; charset=utf-8",
-    //                dataType: "json",
-    //                //success: window.location.href = '/api/report/details/' + userid
-    //            });
-    // }
-    }
-    function GG()
-    { 
-        var result =
-                {
-                    id: '@Model.Id',
-                    status: "Rejected",
-                    reason: document.getElementById("reason").value,
-                    adminName: '@User.Identity.Name'
-                };
-            var datar = JSON.stringify(result);
-            $.ajax(
-                {
-                    type: "POST",
-                    url: "/api/report/approve/" + '@Model.Id',
-                    data: datar,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    //success: window.location.href = '/api/report/details/' + userid
-                });
-    }
-
-</script>
+<script src="~/js/ReportDetails.js"></script>
 @{
     ViewData["Title"] = "Details";
 }
@@ -216,8 +91,18 @@
             @Html.DisplayFor(model => model.LastEdited)
         </dd>
     }
+    @if (Model.Message != null)
+    {
+        <dt>
+            Reason
+        </dt>
+        <dd>
+            <div>
+                @Html.DisplayFor(model => model.Message)
+            </div>
+        </dd>
+    }
 </dl>
-<div id="rej"></div>
 <div>
     @if (User.Identity.Name == Model.Owner)
     {
@@ -225,9 +110,14 @@
     }
     else if(User.IsInRole("Admin"))
     {
+        <b>Actions: </b>
+        <br />
         <a onclick="Approve('@Model.Id', '@User.Identity.Name')">Approve</a>
+        <br />
         <a onclick="RejectForm('@Model.Id', '@User.Identity.Name')">Reject</a>
     }
+    <br />
+<div id="rej"></div>
     <br />
     <a asp-action="Index">Back to List</a>
 </div>
