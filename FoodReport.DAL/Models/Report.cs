@@ -11,6 +11,8 @@ namespace FoodReport.DAL.Models
         public DateTime Date { get; set; }
         public string Status { get; set; }
         public bool isEdited { get; set; }
-        public DateTime EditingTime { get; set; }
+        public DateTime LastEdited { get; set; }
+        public string EditedBy { get; set; }
+        public string Message { get; set; }
     }
 }

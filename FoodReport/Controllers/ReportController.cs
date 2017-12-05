@@ -1,6 +1,7 @@
 ﻿using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
+using FoodReport.Models.Report;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -46,7 +47,7 @@ namespace FoodReport.Controllers
             {
                 return NotFound();
             }
-
+            if (report.List == null) report.List = new List<Field>();
             //return Json(report);
             return View(report);
         }
@@ -111,10 +112,10 @@ namespace FoodReport.Controllers
         //      expected: id, fields != null
         //      actual: id != null, fields == null
         // TODO: fix it!!
-        public async Task<IActionResult> Edit(string id, [FromBody] List<Field> fields)
+        public async Task<IActionResult> Edit([FromBody] EditReportViewModel item)
         {
-            var report = await _unitOfWork.Reports().Get(id);
-            if (id != report.Id)
+            var report = await _unitOfWork.Reports().Get(item.Id);
+            if (item.Id != report.Id)
             {
                 return NotFound();
             }
@@ -125,9 +126,9 @@ namespace FoodReport.Controllers
                 {
 
                     report.isEdited = true;
-                    report.EditingTime = DateTime.Now;
-                    report.List = fields;
-                    await _unitOfWork.Reports().Update(id,report);
+                    report.LastEdited = DateTime.Now;
+                    report.List = item.List;
+                    await _unitOfWork.Reports().Update(item.Id,report);
                 }
                 catch //(DbUpdateConcurrencyException)
                 {
@@ -172,6 +173,31 @@ namespace FoodReport.Controllers
         {
             await _unitOfWork.Reports().Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost("approve/{id}")]
+        public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusViewModel item)
+        {
+            var report = await _unitOfWork.Reports().Get(item.Id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                report.isEdited = true;
+                report.Status = item.Status;
+                report.LastEdited = DateTime.Now;
+                report.EditedBy = item.AdminName;
+                report.Message = item.Reason;
+                await _unitOfWork.Reports().Update(item.Id, report);
+                return Ok();
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+
         }
     }
 }
