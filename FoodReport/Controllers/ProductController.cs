@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodReport.Controllers
 {
@@ -34,14 +33,13 @@ namespace FoodReport.Controllers
             return await _unitOfWork.Products().GetAll();
         }
 
-        // GET api/notes/5
         [Route("details")]
         public IActionResult Details() => View();
 
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            return View( await GetNoteByIdInternal(id));
+            return View(await GetNoteByIdInternal(id));
         }
 
         private async Task<Product> GetNoteByIdInternal(string id)
@@ -53,15 +51,18 @@ namespace FoodReport.Controllers
         {
             return View();
         }
-        //POST api/notes
         [HttpPost("create")]
-        public IActionResult Create([Bind("Name,Available,Unit,Price,Provider")]Product item)
+        public async Task<IActionResult> Create(Product item)
         {
-            _unitOfWork.Products().Add(item);
+            var products = await _unitOfWork.Products().GetAll() as List<Product>;
+            if (products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+            {
+                return RedirectToAction(nameof(Create));
+            }
+            await _unitOfWork.Products().Add(item);
             return RedirectToAction(nameof(Index));
         }
 
-        // PUT api/notes/5
         [Route("edit/{id}")]
         public async Task<IActionResult> Edit(string id)
 
@@ -80,9 +81,9 @@ namespace FoodReport.Controllers
         }
 
         [HttpPost("edit/{id}")]
-        public IActionResult Edit([Bind("Id,Name,Available,Unit,Price,Provider")]Product item)
+        public IActionResult Edit(Product item)
         {
-            _unitOfWork.Products().Update(item.Id,item);
+            _unitOfWork.Products().Update(item.Id, item);
             return RedirectToAction(nameof(Index));
         }
 
@@ -113,5 +114,10 @@ namespace FoodReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet("prodsjson")]
+        public async Task<JsonResult> GetProdsJson()
+        {
+            return Json(await _unitOfWork.Products().GetAll());
+        }
     }
 }

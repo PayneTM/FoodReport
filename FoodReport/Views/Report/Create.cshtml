@@ -1,6 +1,8 @@
-﻿@model FoodReport.DAL.Models.Field
+﻿@model FoodReport.Models.Report.CreateReportViewModel
 @{
     ViewData["Title"] = "Create";
+    var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
+        .ToList();
 }
 <script src="~/js/ReportCreate.js"></script>
 <h2>Create</h2>
@@ -13,19 +15,23 @@
                 <div id="blockInput1">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="col-sm-4">
-                        <label asp-for="Product" class="control-label" id="prod1"></label>
-                        <input asp-for="Product" class="form-control" />
-                        <span asp-validation-for="Product" class="text-danger"></span>
+                        <label asp-for="@Model.Fields.Product" class="control-label" id="prod1"></label>
+                        @*<input asp-for="Product" class="form-control" />*@
+                        <select class="form-control" asp-for="@Model.Fields.Product"
+                                asp-items="@list">
+                            <option>Please select one</option>
+                        </select>
+                        <span asp-validation-for="@Model.Fields.Product" class="text-danger"></span>
                     </div>
                     <div class="col-sm-4">
-                        <label asp-for="Count" class="control-label" style="position : relative"></label>
-                        <input asp-for="Count" class="form-control" id="count1" />
-                        <span asp-validation-for="Count" class="text-danger"></span>
+                        <label asp-for="@Model.Fields.Count" class="control-label" style="position : relative"></label>
+                        <input asp-for="@Model.Fields.Count" class="form-control" id="count1" />
+                        <span asp-validation-for="@Model.Fields.Count" class="text-danger"></span>
                     </div>
                     <div class="col-sm-4">
-                        <label asp-for="Price" class="control-label"></label>
-                        <input asp-for="Price" class="form-control" id="price1" type="number"/>
-                        <span asp-validation-for="Price" class="text-danger"></span>
+                        <label asp-for="@Model.Fields.Price" class="control-label"></label>
+                        <input asp-for="@Model.Fields.Price" class="form-control" id="price1" type="number"/>
+                        <span asp-validation-for="@Model.Fields.Price" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -39,7 +45,7 @@
     <br />
     <a onclick="Send()">Create</a>
     <br />
-
+    <a onclick="GetProds()"> olololololololo</a>
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts {

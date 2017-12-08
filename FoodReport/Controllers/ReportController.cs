@@ -22,17 +22,13 @@ namespace FoodReport.Controllers
             _unitOfWork = new UnitOfWork(options);
         }
 
-        // GET: Field
-        
         [HttpGet("all")]
         public async Task<IActionResult> Index()
         {
             var result = await _unitOfWork.Reports().GetAll();
-            //return View(Json(await _unitOfWork.Reports().GetAll());
             return View(result);
         }
 
-        // GET: Field/Details/5
         [HttpGet("details/{id}")]
 
         public async Task<IActionResult> Details(string id)
@@ -48,22 +44,20 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
             if (report.List == null) report.List = new List<Field>();
-            //return Json(report);
             return View(report);
         }
 
-        // GET: Field/Create
         [Route("create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var result = new CreateReportViewModel
+            {
+                Products = await _unitOfWork.Products().GetAll()
+            };
+            return View(result);
         }
 
-        // POST: Field/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("create")]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody] List<Field> @field)
         {
             if (ModelState.IsValid)
@@ -80,10 +74,8 @@ namespace FoodReport.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(@field);
-            //return Json(@field);
         }
 
-        // GET: Field/Edit/5
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
@@ -97,21 +89,10 @@ namespace FoodReport.Controllers
             {
                 return NotFound();
             }
-            //return Json(report);
-
             return View(report);
         }
 
-        // POST: Field/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("edit/{id}")]
-        //[ValidateAntiForgeryToken]
-
-
-        //      expected: id, fields != null
-        //      actual: id != null, fields == null
-        // TODO: fix it!!
         public async Task<IActionResult> Edit([FromBody] EditReportViewModel item)
         {
             var report = await _unitOfWork.Reports().Get(item.Id);
@@ -128,26 +109,17 @@ namespace FoodReport.Controllers
                     report.isEdited = true;
                     report.LastEdited = DateTime.Now;
                     report.List = item.List;
-                    await _unitOfWork.Reports().Update(item.Id,report);
+                    await _unitOfWork.Reports().Update(item.Id, report);
                 }
-                catch //(DbUpdateConcurrencyException)
+                catch
                 {
-                    //if (!ReportExists(report.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
+                    throw new Exception();
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //return Json(report);
             return View(report);
         }
 
-        // GET: Field/Delete/5
         [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -162,13 +134,10 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            //return Json(report);
             return View(report);
         }
 
-        // POST: Field/Delete/5
         [HttpPost("delete/{id}"), ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await _unitOfWork.Reports().Remove(id);
