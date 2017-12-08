@@ -54,9 +54,13 @@ namespace FoodReport.Controllers
 
         // GET: Field/Create
         [Route("create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var result = new CreateReportViewModel
+            {
+                Products = await _unitOfWork.Products().GetAll()
+            };
+            return View(result);
         }
 
         // POST: Field/Create

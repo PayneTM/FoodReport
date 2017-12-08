@@ -1,5 +1,6 @@
 ﻿var counter = 2;
 var isNewRowAllowed = true;
+var list = [];
 function Add() {
     if (NotEmptyInputs())
     {
@@ -9,11 +10,20 @@ function Add() {
     //Product input
     //<input class="form-control" type="text" id = product# placeholder="Product">
     //////////////////////////////////////
-    var input1 = document.createElement("input");
+        //var input1 = document.createElement("input");
+        var input1 = document.createElement("select");
     input1.className = "form-control";
     input1.type = "text";
     input1.id = "prod" + counter;
-    input1.placeholder = "Product";
+    for (var i = 0; i != list.length; i++)
+    {
+        var rest = list[0][0].name;
+        var opt = document.createElement("option");
+        opt.innerHTML = rest;
+        input1.options.add(opt);
+    }
+    //input1.options.add(list);
+    //input1.placeholder = "Product";
 
     ///////////////////////////////////////
     //Count input
@@ -90,6 +100,7 @@ function NotEmptyInputs()
 
 function Send() {
     var inputs = document.getElementsByTagName("input");
+    var count = document.getElementsByClassName("form-control")
 
     var result = [];
     for (var i = 1; i < inputs.length; i = i + 3) {
@@ -115,4 +126,34 @@ function Send() {
             dataType: "json",
             success: window.location.href = '/api/report/all'
         });
+}
+function GetProds()
+{
+    var product =
+        {
+            id: "",
+            available: 0,
+            name: "",
+            price: 0,
+            provider: "",
+            unit: ""
+        }; 
+    //$.ajax(
+    //    {
+    //        type: "GET",
+    //        url: "/api/product/prodsjson",
+    //        data: prods,
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        success: function (data)
+    //        {
+    //            prods = JSON.parse(data);
+    //            alert(prods);
+    //        }
+    //    });
+    $.getJSON("/api/product/prodsjson", product, function (product) {
+        list.push(product);
+        //var smth = prods[0].id;
+        //alert(prods[0].id);
+    });
 }

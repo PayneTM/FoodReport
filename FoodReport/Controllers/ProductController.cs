@@ -113,5 +113,10 @@ namespace FoodReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet("prodsjson")]
+        public async Task<JsonResult> GetProdsJson()
+        {
+            return Json(await _unitOfWork.Products().GetAll());
+        }
     }
 }
