@@ -125,13 +125,14 @@ function GetProds() {
     var product =
         {
             id: "",
-            available: 0,
             name: "",
-            price: 0,
             provider: "",
-            unit: ""
         };
     $.getJSON("/api/product/prodsjson", product, function (product) {
         list.push(product);
     });
 }
+window.onload = function ()
+{
+    GetProds();
+};

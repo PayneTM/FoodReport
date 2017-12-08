@@ -16,7 +16,6 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="col-sm-4">
                         <label asp-for="@Model.Fields.Product" class="control-label" id="prod1"></label>
-                        @*<input asp-for="Product" class="form-control" />*@
                         <select class="form-control" asp-for="@Model.Fields.Product"
                                 asp-items="@list">
                             <option>Please select one</option>

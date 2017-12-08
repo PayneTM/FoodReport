@@ -28,7 +28,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -45,7 +44,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -59,7 +57,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -77,7 +74,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -96,7 +92,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -115,7 +110,6 @@ namespace FoodReport.DAL.Repos
             }
             catch 
             {
-                // log or manage the exception
                 return null;
             }
         }

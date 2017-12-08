@@ -27,7 +27,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -44,7 +43,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -53,12 +51,10 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                if(! await IsExisting("Name",item.Name))
                await _context.Products.InsertOneAsync(item);
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -76,7 +72,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -100,7 +95,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
