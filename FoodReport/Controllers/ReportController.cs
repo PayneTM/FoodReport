@@ -37,14 +37,17 @@ namespace FoodReport.Controllers
             {
                 return NotFound();
             }
-
-            var report = await _unitOfWork.Reports().Get(id) ?? new Report();
-            if (report == null)
+            var item = new EditReportViewModel();
+            try
+            {
+                item.Products = await _unitOfWork.Products().GetAll();
+                item.Report = await _unitOfWork.Reports().Get(id);
+            }
+            catch
             {
                 return NotFound();
             }
-            if (report.List == null) report.List = new List<Field>();
-            return View(report);
+            return View(item);
         }
 
         [Route("create")]
@@ -84,16 +87,20 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            var report = await _unitOfWork.Reports().Get(id);
-            if (report == null)
+            var item = new EditReportViewModel
+            {
+                Report = await _unitOfWork.Reports().Get(id),
+                Products = await _unitOfWork.Products().GetAll()
+            };
+            if (item == null)
             {
                 return NotFound();
             }
-            return View(report);
+            return View(item);
         }
 
         [HttpPost("edit/{id}")]
-        public async Task<IActionResult> Edit([FromBody] EditReportViewModel item)
+        public async Task<IActionResult> Edit([FromBody] ChangeDataReportViewModel item)
         {
             var report = await _unitOfWork.Reports().Get(item.Id);
             if (item.Id != report.Id)
@@ -107,8 +114,10 @@ namespace FoodReport.Controllers
                 {
 
                     report.isEdited = true;
+                    report.EditedBy = User.Identity.Name;
                     report.LastEdited = DateTime.Now;
                     report.List = item.List;
+                    report.Status = "Pending";
                     await _unitOfWork.Reports().Update(item.Id, report);
                 }
                 catch

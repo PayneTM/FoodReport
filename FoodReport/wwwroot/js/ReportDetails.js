@@ -1,22 +1,25 @@
 ﻿var isFormAllowed = true;
 function Save(itemid) {
     var inputs = document.getElementsByTagName("input");
+    var opt = document.getElementsByTagName("select");
 
     var result =
         {
             list: [],
             id: itemid
         };
-    for (var i = 1; i < inputs.length; i = i + 3) {
+    for (var i = 1, j = 0; i < inputs.length; i = i + 2, j++) {
         var field =
             {
                 product: '',
                 count: 0,
                 price: 0
             };
-        field.product = inputs.item(i).value;
-        field.count = inputs.item(i + 1).value;
-        field.price = inputs.item(i + 2).value;
+        if (j != opt.length) {
+            field.product = opt[j].value;
+        }
+        field.count = inputs.item(i).value;
+        field.price = inputs.item(i + 1).value;
         result.list.push(field);
     };
     var leng = result.toString().length;
@@ -27,7 +30,8 @@ function Save(itemid) {
             url: "/api/report/edit/" + itemid,
             data: datar,
             contentType: "application/json; charset=utf-8",
-            dataType: "json"
+            dataType: "json",
+            success: window.location.href = "/api/report/all/"
         });
 }
 function Approve(userid, admin) {

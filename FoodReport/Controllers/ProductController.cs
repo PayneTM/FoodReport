@@ -47,11 +47,13 @@ namespace FoodReport.Controllers
             return await _unitOfWork.Products().Get(id) ?? new Product();
         }
         [Route("create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Product item)
         {
             var products = await _unitOfWork.Products().GetAll() as List<Product>;
@@ -64,6 +66,8 @@ namespace FoodReport.Controllers
         }
 
         [Route("edit/{id}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(string id)
 
         {
@@ -81,6 +85,8 @@ namespace FoodReport.Controllers
         }
 
         [HttpPost("edit/{id}")]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult Edit(Product item)
         {
             _unitOfWork.Products().Update(item.Id, item);
@@ -88,6 +94,7 @@ namespace FoodReport.Controllers
         }
 
         [Route("delete")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Delete(string id)
         {
@@ -107,6 +114,7 @@ namespace FoodReport.Controllers
 
         // POST: TodoListElements/Delete/5
         [HttpPost("delete"), ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -118,6 +126,13 @@ namespace FoodReport.Controllers
         public async Task<JsonResult> GetProdsJson()
         {
             return Json(await _unitOfWork.Products().GetAll());
+        }
+
+        public async Task<IActionResult> GetByName(string name)
+        {
+            var result = await _unitOfWork.Products().GetAll();
+            result.FirstOrDefault(x => x.Name == name);
+            return View(result);
         }
     }
 }
