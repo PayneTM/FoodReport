@@ -8,8 +8,6 @@ namespace FoodReport.BLL.Interfaces
 {
     public interface IStatusReportService :IStatusService<Field>
     {
-        Task Pending();
-        Task Approved();
-        Task Rejected();
+
     }
 }

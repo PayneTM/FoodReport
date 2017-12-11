@@ -7,7 +7,8 @@ namespace FoodReport.BLL.Interfaces
 {
     public interface IStatusService<T>
     {
-        Task Created(List<T> list, string owner);
-        Task Edited();
+        Task onCreateStatus();
+        Task onEditStatus();
+        Task onApproveStatus();
     }
 }

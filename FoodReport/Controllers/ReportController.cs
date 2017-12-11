@@ -69,14 +69,14 @@ namespace FoodReport.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] List<Field> @field)
+        public async Task<IActionResult> Create([FromBody] List<Field> field)
         {
             if (ModelState.IsValid)
             {
-                await _statusReportService.CreateReportStatusPending(@field, User.Identity.Name);
+                await _statusReportService.onCreateStatus(field, User.Identity.Name);
                 return RedirectToAction(nameof(Index));
             }
-            return View(@field);
+            return View(field);
         }
 
         [HttpGet("edit/{id}")]
@@ -111,7 +111,7 @@ namespace FoodReport.Controllers
             {
                 try
                 {
-                    await _statusReportService.EditReportStatusEdited(item, User.Identity.Name);
+                    await _statusReportService.onEditStatus(item, User.Identity.Name);
                 }
                 catch
                 {
@@ -146,29 +146,20 @@ namespace FoodReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusViewModel item)
         {
-            var report = await _unitOfWork.Reports().Get(item.Id);
-            if (report == null)
-            {
-                return NotFound();
-            }
+            if (item == null) throw new NullReferenceException();
             try
             {
-                report.isEdited = true;
-                report.Status = item.Status;
-                report.LastEdited = DateTime.Now;
-                report.EditedBy = item.AdminName;
-                report.Message = item.Reason;
-                await _unitOfWork.Reports().Update(item.Id, report);
+                await _statusReportService.onApproveStatus(item, User.Identity.Name);
                 return Ok();
             }
             catch
             {
-                return Unauthorized();
+                return NotFound();
             }
-
         }
         [HttpGet("search/{criteria}/{value}")]
         public async Task<IActionResult> Search(string criteria, string value)

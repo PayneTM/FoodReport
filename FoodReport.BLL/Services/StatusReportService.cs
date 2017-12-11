@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Services
 {
-    public class StatusReportService
+    public class StatusReportService : IStatusReportService
     {
         private readonly IUnitOfWork _unitOfWork;
         public StatusReportService(IOptions<Settings> options)
         {
             _unitOfWork = new UnitOfWork(options);
         }
-        public async Task CreateReportStatusPending(List<Field> field, string owner)
+        public async Task onCreateStatus(List<Field> field, string owner)
         {
             var report = new Report
             {
@@ -30,7 +30,7 @@ namespace FoodReport.BLL.Services
             await _unitOfWork.Reports().Add(report);
         }
 
-        public async Task EditReportStatusEdited(EditReportModel item, string owner)
+        public async Task onEditStatus(EditReportModel item, string owner)
         {
             var report = await _unitOfWork.Reports().Get(item.Id);
             if (report == null) throw new NullReferenceException();
@@ -41,6 +41,24 @@ namespace FoodReport.BLL.Services
                 report.LastEdited = DateTime.Now;
                 report.List = item.List;
                 report.Status = "Pending";
+                await _unitOfWork.Reports().Update(item.Id, report);
+            }
+            catch
+            {
+                throw new Exception();
+            }
+        }
+        public async Task onApproveStatus(AdminChangeReportStatus item, string owner)
+        {
+            var report = await _unitOfWork.Reports().Get(item.Id);
+            if (report == null) throw new NullReferenceException();
+            try
+            {
+                report.isEdited = true;
+                report.Status = item.Status;
+                report.LastEdited = DateTime.Now;
+                report.EditedBy = item.AdminName;
+                report.Message = item.Reason;
                 await _unitOfWork.Reports().Update(item.Id, report);
             }
             catch
