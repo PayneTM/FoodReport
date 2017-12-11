@@ -1,4 +1,6 @@
-﻿using FoodReport.DAL.Interfaces;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Services;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
 using FoodReport.Models.Report;
@@ -17,10 +19,15 @@ namespace FoodReport.Controllers
     public class ReportController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISearchService _searchService;
+        private readonly StatusReportService _statusReportService;
 
-        public ReportController(IOptions<Settings> options)
+        public ReportController(IUnitOfWork unitOfWork, ISearchService searchService, IOptions<Settings> options)
         {
-            _unitOfWork = new UnitOfWork(options);
+            _unitOfWork = unitOfWork;
+            _searchService = searchService;
+            _statusReportService = new StatusReportService(options);
+
         }
 
         [HttpGet("all")]
@@ -66,15 +73,7 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                var report = new Report
-                {
-                    Date = DateTime.Now,
-                    List = @field,
-                    Owner = User.Identity.Name,
-                    Status = "Pending",
-                    isEdited = false
-                };
-                await _unitOfWork.Reports().Add(report);
+                await _statusReportService.CreateReportStatusPending(@field, User.Identity.Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(@field);
@@ -103,8 +102,7 @@ namespace FoodReport.Controllers
         [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit([FromBody] ChangeDataReportViewModel item)
         {
-            var report = await _unitOfWork.Reports().Get(item.Id);
-            if (item.Id != report.Id)
+            if (item == null)
             {
                 return NotFound();
             }
@@ -113,13 +111,7 @@ namespace FoodReport.Controllers
             {
                 try
                 {
-
-                    report.isEdited = true;
-                    report.EditedBy = User.Identity.Name;
-                    report.LastEdited = DateTime.Now;
-                    report.List = item.List;
-                    report.Status = "Pending";
-                    await _unitOfWork.Reports().Update(item.Id, report);
+                    await _statusReportService.EditReportStatusEdited(item, User.Identity.Name);
                 }
                 catch
                 {
@@ -127,7 +119,7 @@ namespace FoodReport.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(report);
+            return View(nameof(Edit));
         }
 
         [Route("delete/{id}")]
@@ -181,24 +173,9 @@ namespace FoodReport.Controllers
         [HttpGet("search/{criteria}/{value}")]
         public async Task<IActionResult> Search(string criteria, string value)
         {
-            var report = await _unitOfWork.Reports().GetAll();
-            IEnumerable<Report> result = new List<Report>();
-            if (criteria == "owner")
-            {
-                result = report.Where(x => x.Owner == value);
-                ViewData["Message"] = "Your result for name - " + value;
-            }
-            else if (criteria == "status")
-            {
-                result = report.Where(x => x.Status == value);
-                ViewData["Message"] = "Your result for status - " + value;
-            }
-            else if (criteria == "date")
-            {
-                result = report.Where(x => x.Date.ToShortDateString() == value);
-                ViewData["Message"] = "Your result for date - " + value;
-            }
-            return View(result);
+            var result = await _searchService.Report().Search(criteria, value);
+            ViewData["Message"] = result.Message;
+            return View(result.List);
         }
     }
 }

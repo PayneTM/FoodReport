@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FoodReport.BLL\FoodReport.BLL.csproj" />
     <ProjectReference Include="..\FoodReport.DAL\FoodReport.DAL.csproj" />
   </ItemGroup>
 

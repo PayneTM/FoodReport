@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using FoodReport.Models;
+using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Services;
 
 namespace FoodReport
 {
@@ -37,6 +39,9 @@ namespace FoodReport
             services.AddTransient<IReportRepository, ReportRepo>();
             services.AddTransient<IUserRepo, UserRepo>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<ISearchProduct, SearchProductService>();
+            services.AddTransient<ISearchReport, SearchReportService>();
+            services.AddTransient<ISearchService, SearchService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options => //CookieAuthenticationOptions
                 {
