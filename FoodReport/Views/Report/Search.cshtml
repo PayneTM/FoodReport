@@ -1,13 +1,5 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Report>
-
-@{
-    ViewData["Title"] = "Index";
-}
-<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h2>@ViewData["Message"]</h2>
 <table class="table">
     <thead>
         <tr>
@@ -23,8 +15,10 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
         {
+
             <tr>
                 <td>
                     <a asp-action="Search" asp-route-criteria="date" asp-route-value="@item.Date.ToShortDateString()">
@@ -48,7 +42,6 @@
                     {
                         <a asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
                     }
-
                 </td>
             </tr>
         }

@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -31,7 +32,7 @@
                 @Html.DisplayFor(modelItem => item.Provider)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id}) |
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>

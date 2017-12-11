@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoodReport.Controllers
@@ -176,6 +177,28 @@ namespace FoodReport.Controllers
                 return Unauthorized();
             }
 
+        }
+        [HttpGet("search/{criteria}/{value}")]
+        public async Task<IActionResult> Search(string criteria, string value)
+        {
+            var report = await _unitOfWork.Reports().GetAll();
+            IEnumerable<Report> result = new List<Report>();
+            if (criteria == "owner")
+            {
+                result = report.Where(x => x.Owner == value);
+                ViewData["Message"] = "Your result for name - " + value;
+            }
+            else if (criteria == "status")
+            {
+                result = report.Where(x => x.Status == value);
+                ViewData["Message"] = "Your result for status - " + value;
+            }
+            else if (criteria == "date")
+            {
+                result = report.Where(x => x.Date.ToShortDateString() == value);
+                ViewData["Message"] = "Your result for date - " + value;
+            }
+            return View(result);
         }
     }
 }

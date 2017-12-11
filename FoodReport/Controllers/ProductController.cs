@@ -128,10 +128,17 @@ namespace FoodReport.Controllers
             return Json(await _unitOfWork.Products().GetAll());
         }
 
+        [Route("byname/{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
             var result = await _unitOfWork.Products().GetAll();
             result.FirstOrDefault(x => x.Name == name);
+            return View(result);
+        }
+        public async Task<IActionResult> GetByProvider(string provider)
+        {
+            var result = await _unitOfWork.Products().GetAll();
+            result.FirstOrDefault(x => x.Provider == provider);
             return View(result);
         }
     }
