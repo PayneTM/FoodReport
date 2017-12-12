@@ -37,9 +37,9 @@ namespace FoodReport.Controllers
                 {
                     await Authenticate(item.Email, user.Role);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Report");
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                ModelState.AddModelError("", "Wrong username or password!");
             }
             return View(item);
         }
@@ -61,10 +61,10 @@ namespace FoodReport.Controllers
 
                     await Authenticate(model.Email,"User");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Report");
                 }
                 else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Wrong username or password!");
             }
             return View(model);
         }
