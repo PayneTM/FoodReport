@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FoodReport.Models.Report
 {
-    public class ChangeDataReportViewModel : EditReportModel
+    public class ChangeDataReportViewModel : EditReportModel<Field>
     {
     }
 }

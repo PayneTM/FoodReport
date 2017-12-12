@@ -20,13 +20,13 @@ namespace FoodReport.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISearchService _searchService;
-        private readonly StatusReportService _statusReportService;
+        private readonly IStatusReportService _statusReportService;
 
-        public ReportController(IUnitOfWork unitOfWork, ISearchService searchService, IOptions<Settings> options)
+        public ReportController(IUnitOfWork unitOfWork, ISearchService searchService, IStatusReportService statusReportService)
         {
             _unitOfWork = unitOfWork;
             _searchService = searchService;
-            _statusReportService = new StatusReportService(options);
+            _statusReportService = statusReportService;
 
         }
 
@@ -161,7 +161,7 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
         }
-        [HttpGet("search/{criteria}/{value}")]
+        [HttpGet]
         public async Task<IActionResult> Search(string criteria, string value)
         {
             var result = await _searchService.Report().Search(criteria, value);

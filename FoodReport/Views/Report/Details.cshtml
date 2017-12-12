@@ -5,6 +5,7 @@
     var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
        .ToList();
 }
+<strong>@ViewData["Error"]</strong>
 
 <h2>Details</h2>
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Services
 {
-    public class SearchReportService: ISearchReport
+    public class SearchReportService : ISearchReport
     {
         private readonly IUnitOfWork _unitOfWork;
         public SearchReportService(IUnitOfWork unitOfWork)
@@ -19,14 +19,15 @@ namespace FoodReport.BLL.Services
         }
         public async Task<SearchModel<Report>> Search(string criteria, string value)
         {
-            var report = await _unitOfWork.Reports().GetAll();
             try
             {
+                var report = await _unitOfWork.Reports().GetAll();
+
                 return await GetInernalReport(report, criteria, value);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception();
+                throw ex;
             };
         }
         private async Task<SearchModel<Report>> GetInernalReport(IEnumerable<Report> report, string criteria, string value)
@@ -35,7 +36,7 @@ namespace FoodReport.BLL.Services
             switch (criteria)
             {
                 case "owner":
-                    model.List = report.Where(x => x.Owner == value);
+                    model.List = report.Where(x => x.Owner.ToLower() == value.ToLower());
                     model.Message = "Your result for name - " + value;
                     break;
                 case "date":
@@ -43,10 +44,12 @@ namespace FoodReport.BLL.Services
                     model.Message = "Your result for date - " + value;
                     break;
                 case "status":
-                    model.List = report.Where(x => x.Status == value);
+                    model.List = report.Where(x => x.Status.ToLower() == value.ToLower());
                     model.Message = "Your result for status - " + value;
                     break;
+                default: throw new Exception(criteria + " - wrong criteria");
             }
+            if (model.List.Count() == 0) throw new Exception("Nothing found on - " + value);
             return model;
         }
     }

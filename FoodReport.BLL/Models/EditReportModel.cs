@@ -6,8 +6,8 @@ using System.Text;
 
 namespace FoodReport.BLL.Models
 {
-    public class EditReportModel : Entity
+    public class EditReportModel<T> : Entity
     {
-        public List<Field> List { get; set; }
+        public List<T> List { get; set; }
     }
 }

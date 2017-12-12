@@ -3,11 +3,23 @@
 @{
     ViewData["Title"] = "Index";
 }
+<strong>@ViewData["Error"]</strong>
+
 <h2>Index</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
+
 </p>
+<form asp-action="Search" method="get">
+    <select name="criteria">
+        <option>owner</option>
+        <option>date</option>
+        <option>status</option>
+    </select>
+    <input type="text" name="value" />
+    <input type="submit" value="search" />
+</form>
 <table class="table">
     <thead>
         <tr>

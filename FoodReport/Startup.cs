@@ -42,6 +42,8 @@ namespace FoodReport
             services.AddTransient<ISearchProduct, SearchProductService>();
             services.AddTransient<ISearchReport, SearchReportService>();
             services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IStatusReportService, StatusReportService>();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options => //CookieAuthenticationOptions
                 {

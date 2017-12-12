@@ -19,14 +19,14 @@ namespace FoodReport.BLL.Services
         }
         public async Task<SearchModel<Product>> Search(string criteria, string value)
         {
-            var product = await _unitOfWork.Products().GetAll();
             try
             {
+                var product = await _unitOfWork.Products().GetAll();
                 return await GetInernalProduct(product, criteria, value);
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception();
+                throw ex;
             };
         }
         private async Task<SearchModel<Product>> GetInernalProduct(IEnumerable<Product> product, string criteria, string value)
@@ -34,15 +34,17 @@ namespace FoodReport.BLL.Services
             var model = new SearchModel<Product>();
             switch (criteria)
             {
-                case "owner":
-                    model.List = product.Where(x => x.Name == value);
-                    model.Message = "Your result for name - " + value;
-                    break;
-                case "status":
-                    model.List = product.Where(x => x.Provider == value);
+                case "provider":
+                    model.List = product.Where(x => x.Provider.ToLower() == value.ToLower());
                     model.Message = "Your result for provider - " + value;
                     break;
+                case "name":
+                    model.List = product.Where(x => x.Name.ToLower() == value.ToLower());
+                    model.Message = "Your result for name - " + value;
+                    break;
+                default: throw new Exception(criteria + " - wrong criteria");
             }
+            if (model.List.Count() == 0) throw new Exception("Nothing found on - " + value);
             return model;
         }
     }

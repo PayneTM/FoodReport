@@ -1,9 +1,11 @@
-﻿using FoodReport.DAL.Interfaces;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,17 +17,27 @@ namespace FoodReport.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISearchService _searchService;
 
-        public ProductController(IOptions<Settings> options)
+        public ProductController(IUnitOfWork unitOfWork, ISearchService searchService)
         {
-            _unitOfWork = new UnitOfWork(options);
+            _unitOfWork = unitOfWork;
+            _searchService = searchService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> Index()
         {
-            var result = await GetProductInternal();
-            return View(result);
+            try
+            {
+                var result = await GetProductInternal();
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Error"] = ex.Message;
+                return View();
+            }
         }
 
         private async Task<IEnumerable<Product>> GetProductInternal()
@@ -128,18 +140,20 @@ namespace FoodReport.Controllers
             return Json(await _unitOfWork.Products().GetAll());
         }
 
-        [Route("byname/{name}")]
-        public async Task<IActionResult> GetByName(string name)
+        [HttpGet]
+        public async Task<IActionResult> Search(string criteria, string value)
         {
-            var result = await _unitOfWork.Products().GetAll();
-            result.FirstOrDefault(x => x.Name == name);
-            return View(result);
-        }
-        public async Task<IActionResult> GetByProvider(string provider)
-        {
-            var result = await _unitOfWork.Products().GetAll();
-            result.FirstOrDefault(x => x.Provider == provider);
-            return View(result);
+            try
+            {
+                var result = await _searchService.Product().Search(criteria, value);
+                ViewData["Message"] = result.Message;
+                return View(result.List);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Error"] = ex.Message;
+                return View();
+            }
         }
     }
 }

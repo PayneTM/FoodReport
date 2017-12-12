@@ -1,4 +1,5 @@
-﻿using FoodReport.BLL.Models;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
@@ -27,15 +28,23 @@ namespace FoodReport.BLL.Services
                 Status = "Pending",
                 isEdited = false
             };
-            await _unitOfWork.Reports().Add(report);
-        }
-
-        public async Task onEditStatus(EditReportModel item, string owner)
-        {
-            var report = await _unitOfWork.Reports().Get(item.Id);
-            if (report == null) throw new NullReferenceException();
             try
             {
+                await _unitOfWork.Reports().Add(report);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task onEditStatus(EditReportModel<Field> item, string owner)
+        {
+            try
+            {
+                var report = await _unitOfWork.Reports().Get(item.Id);
+                if (report == null) throw new NullReferenceException("Item Not Found");
+
                 report.isEdited = true;
                 report.EditedBy = owner;
                 report.LastEdited = DateTime.Now;
@@ -43,17 +52,18 @@ namespace FoodReport.BLL.Services
                 report.Status = "Pending";
                 await _unitOfWork.Reports().Update(item.Id, report);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception();
+                throw ex;
             }
         }
         public async Task onApproveStatus(AdminChangeReportStatus item, string owner)
         {
-            var report = await _unitOfWork.Reports().Get(item.Id);
-            if (report == null) throw new NullReferenceException();
             try
             {
+                var report = await _unitOfWork.Reports().Get(item.Id);
+                if (report == null) throw new NullReferenceException("Item not found");
+
                 report.isEdited = true;
                 report.Status = item.Status;
                 report.LastEdited = DateTime.Now;
@@ -61,9 +71,9 @@ namespace FoodReport.BLL.Services
                 report.Message = item.Reason;
                 await _unitOfWork.Reports().Update(item.Id, report);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception();
+                throw ex;
             }
         }
     }

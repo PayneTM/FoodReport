@@ -1,0 +1,38 @@
+﻿@model IEnumerable<FoodReport.DAL.Models.Product>
+<h2>@ViewData["Message"]</h2>
+@if (ViewData["Error"] == null)
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Provider
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                        @item.Name
+                </td>
+                <td>
+                        @item.Provider
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+else
+{
+    <h2>@ViewData["Error"]</h2>
+}
+<a asp-action="Index">Back</a>
