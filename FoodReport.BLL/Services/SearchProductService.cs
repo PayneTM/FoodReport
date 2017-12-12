@@ -32,7 +32,7 @@ namespace FoodReport.BLL.Services
         private async Task<SearchModel<Product>> GetInernalProduct(IEnumerable<Product> product, string criteria, string value)
         {
             var model = new SearchModel<Product>();
-            switch (criteria)
+            switch (criteria.ToLower())
             {
                 case "provider":
                     model.List = product.Where(x => x.Provider.ToLower() == value.ToLower());

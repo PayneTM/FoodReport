@@ -31,7 +31,7 @@ function Save(itemid) {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = "/api/report/all/"
+            success: window.location.href = "/api/report/details/" + itemid
         });
 }
 function Approve(userid, admin) {
@@ -50,7 +50,7 @@ function Approve(userid, admin) {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = '/api/report/all/'
+            success: window.location.href = '/api/report/refresh/'
         });
 }
 function RejectForm(itemid, admin) {
@@ -61,12 +61,15 @@ function RejectForm(itemid, admin) {
 
         var textarea = document.createElement("textarea");
         textarea.id = "reason";
+        textarea.style.width = "500px";
+        textarea.style.height = "100px";
         var labeel = document.createElement("label");
         labeel.htmlFor = "reason";
-        labeel.innerHTML = "Reason"
+        labeel.innerHTML = "Reason:"
 
         var send = document.createElement("a");
         send.innerHTML = "Send";
+        send.className = "btn btn-default";
         send.onclick = function () {
             Reject(itemid, admin);
         };
@@ -97,6 +100,6 @@ function Reject(itemid, admin) {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = '/api/report/all/'
+            success: window.location.href = '/api/report/refresh/'
         });
 }

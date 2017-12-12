@@ -33,7 +33,7 @@ namespace FoodReport.BLL.Services
         private async Task<SearchModel<Report>> GetInernalReport(IEnumerable<Report> report, string criteria, string value)
         {
             var model = new SearchModel<Report>();
-            switch (criteria)
+            switch (criteria.ToLower())
             {
                 case "owner":
                     model.List = report.Where(x => x.Owner.ToLower() == value.ToLower());

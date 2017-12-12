@@ -1,50 +1,63 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Product>
+<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css">
+<link rel="stylesheet" type="text/css" href="~/css/SearchStyleSheet.css" />
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
 }
-    <h3>@ViewData["Error"]</h3>
+<h3>@ViewData["Error"]</h3>
 
-<h2>Index</h2>
+<h2>Products</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-default" asp-action="Create">Create New</a>
+    }
 </p>
 <form asp-action="Search" method="get">
-    <select name="criteria">
-        <option>name</option>
-        <option>provider</option>
+    <select name="criteria" id="soflow">
+        <option>Name</option>
+        <option>Provider</option>
     </select>
     <input type="text" name="value" />
-    <input type="submit" value="search" />
+    <input type="submit" value="Search" class="btn btn-default" />
 </form>
 
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Provider)
-                </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Provider)
+            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
                     @Html.DisplayFor(modelItem => item.Name)
-</td>
-            <td>
-                <a asp-action="Search" asp-route-criteria="provider" asp-route-value="@item.Provider"> @item.Provider</a>
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <a asp-action="Search" asp-route-criteria="provider" asp-route-value="@item.Provider"> @item.Provider</a>
+                </td>
+
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-default" asp-action="Edit" asp-route-id="@item.Id"> Edit </a>
+                        <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

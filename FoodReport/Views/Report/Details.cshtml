@@ -1,5 +1,8 @@
 ﻿@model FoodReport.Models.Report.EditReportViewModel
 <script src="~/js/ReportDetails.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css">
+<link rel="stylesheet" type="text/css" href="~/css/InfoStyleSheet.css" />
+
 @{
     ViewData["Title"] = "Details";
     var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
@@ -7,10 +10,9 @@
 }
 <strong>@ViewData["Error"]</strong>
 
-<h2>Details</h2>
+<h2>Report details</h2>
 
 <div>
-    <h4>Report</h4>
     <hr />
     <table class="table">
         <thead>
@@ -33,13 +35,9 @@
                 {
                     <tr>
                         <td>
-                            @*<div class="col-sm-4">*@
-                                @*<input class="form-control" type="text" value=@item.Product />*@
                                 <select class="form-control" asp-for="@item.Product"
                                         asp-items="@list">
-                                    @*<option>Please select one</option>*@
                                 </select>
-                                @*</div>*@
 </td>
                         <td>
                             <input class="form-control" type="text" value=@item.Count />
@@ -94,7 +92,7 @@
     @if (Model.Report.isEdited)
     {
         <dt>
-            @Html.DisplayNameFor(model => model.Report.isEdited)
+           Edited
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Report.LastEdited)
@@ -119,21 +117,22 @@
     }
 </dl>
 <div>
+        <strong>Actions: </strong>
+    <br />
     @if (User.Identity.Name == Model.Report.Owner)
     {
-        <a onclick="Save('@Model.Report.Id')">Save</a>
+        <a class="btn btn-default" onclick="Save('@Model.Report.Id')">Save</a>
         <br />
+        <br />
+
     }
     @if(User.IsInRole("Admin"))
     {
-        <b>Actions: </b>
-        <br />
-        <a onclick="Approve('@Model.Report.Id', '@User.Identity.Name')">Approve</a>
-        <br />
-        <a onclick="RejectForm('@Model.Report.Id', '@User.Identity.Name')">Reject</a>
-    }
+        <a class="btn btn-default" onclick="Approve('@Model.Report.Id', '@User.Identity.Name')">Approve</a>
+        <a class="btn btn-default" onclick="RejectForm('@Model.Report.Id', '@User.Identity.Name')">Reject</a>
     <br />
 <div id="rej"></div>
+    }
     <br />
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-default" asp-action="Index">Back to List</a>
 </div>

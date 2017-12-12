@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Report>
+<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css" />
+
 <h2>@ViewData["Message"]</h2>
 <strong>@ViewData["Error"]</strong>
 
@@ -14,6 +16,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -39,10 +42,10 @@
                     </a>
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id"> Details </a>
-                    @if (item.Owner == User.Identity.Name)
+                    <a class="btn btn-default" asp-action="Details" asp-route-id="@item.Id"> Details</a class="btn>
+                    @if(User.IsInRole("Admin"))
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
+                        <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
                     }
                 </td>
             </tr>

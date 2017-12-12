@@ -71,7 +71,7 @@ namespace FoodReport
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Report}/{action=Index}/{id?}");
             });
             var Db = new InitMongoDb(options);
             Db.Init();
