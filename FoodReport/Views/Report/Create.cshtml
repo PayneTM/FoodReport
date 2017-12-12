@@ -7,8 +7,7 @@
 <strong>@ViewData["Error"]</strong>
 
 <script src="~/js/ReportCreate.js"></script>
-<h2>Create</h2>
-<h4>Field</h4>
+<h2>Create report</h2>
 <hr />
 <div class="row">
     <div class="form-group">
@@ -41,13 +40,13 @@
     </div>
 </div>
 <div>
+    <br />
     
-    <a href="#" id="filldetails" onclick="Add()">Add</a>
+    <a class="btn btn-default" href="#" id="filldetails" onclick="Add()">Add</a>
+    <a class="btn btn-default" onclick="Send()">Create</a>
     <br />
-    <a onclick="Send()">Create</a>
     <br />
-   @* <a onclick="GetProds()"> olololololololo</a>*@
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-default" asp-action="Index">Back to List</a>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,38 +1,48 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Product>
+<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css">
+
 <h2>@ViewData["Message"]</h2>
 @if (ViewData["Error"] == null)
 {
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Product
-            </th>
-            <th>
-                Provider
-            </th>
-            <th>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                        @item.Name
-                </td>
-                <td>
-                        @item.Provider
-                </td>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Provider
+                </th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th></th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Provider
+                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a class="btn btn-default" asp-action="Edit" asp-route-id="@item.Id"> Edit </a>
+                            <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 else
 {
     <h2>@ViewData["Error"]</h2>
 }
-<a asp-action="Index">Back</a>
+<a class="btn btn-default" asp-action="Index">Back</a>

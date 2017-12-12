@@ -118,7 +118,8 @@ function Send() {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = '/api/report/all'
+            success:
+                window.location.href = '/api/report/refresh'
         });
 }
 function GetProds() {

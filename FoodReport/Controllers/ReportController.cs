@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace FoodReport.Controllers
 {
     [Authorize]
+    [Route("")]
     [Route("api/report/")]
     public class ReportController : Controller
     {
@@ -31,6 +32,7 @@ namespace FoodReport.Controllers
         }
 
         [HttpGet("all")]
+        [Route("")]
         public async Task<IActionResult> Index()
         {
             var result = await _unitOfWork.Reports().GetAll();
@@ -146,7 +148,7 @@ namespace FoodReport.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("approve/{id}")]
         public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusViewModel item)
         {
@@ -161,12 +163,18 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
         }
-        [HttpGet]
+        [HttpGet("search")]
         public async Task<IActionResult> Search(string criteria, string value)
         {
             var result = await _searchService.Report().Search(criteria, value);
             ViewData["Message"] = result.Message;
             return View(result.List);
         }
+        [HttpGet("refresh")]
+        public IActionResult Refresh()
+        {
+            return RedirectToAction("Index", "Report");
+        }
+
     }
 }
