@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Repos
@@ -19,7 +18,7 @@ namespace FoodReport.DAL.Repos
             _context = new MongoContext(settings);
         }
 
-        public async Task<IEnumerable<Report>> GetAll()
+        public async Task<IEnumerable<Report>> GetAll(string id = null)
         {
             try
             {
@@ -28,7 +27,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -45,7 +43,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -58,7 +55,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -76,7 +72,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -95,7 +90,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }

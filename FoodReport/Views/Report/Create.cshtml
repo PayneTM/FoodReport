@@ -1,53 +1,54 @@
-﻿@model FoodReport.DAL.Models.Report
-
+﻿@model FoodReport.Models.Report.CreateReportViewModel
 @{
     ViewData["Title"] = "Create";
+    var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
+        .ToList();
 }
+<strong>@ViewData["Error"]</strong>
 
+<script src="~/js/ReportCreate.js"></script>
 <h2>Create</h2>
-
-<h4>Report</h4>
+<h4>Field</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Count" class="control-label"></label>
-                <input asp-for="Count" class="form-control" />
-                <span asp-validation-for="Count" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalPrice" class="control-label"></label>
-                <input asp-for="TotalPrice" class="form-control" />
-                <span asp-validation-for="TotalPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Owner" class="control-label"></label>
-                <input asp-for="Owner" class="form-control" />
-                <span asp-validation-for="Owner" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+    <div class="form-group">
+        <form class="form-horizontal">
+            <div id="container">
+                <div id="blockInput1">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="col-sm-4">
+                        <label asp-for="@Model.Fields.Product" class="control-label" id="prod1"></label>
+                        <select class="form-control" asp-for="@Model.Fields.Product"
+                                asp-items="@list">
+                            <option>Please select one</option>
+                        </select>
+                        <span asp-validation-for="@Model.Fields.Product" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label asp-for="@Model.Fields.Count" class="control-label" style="position : relative"></label>
+                        <input asp-for="@Model.Fields.Count" class="form-control" id="count1" type="number"/>
+                        <span asp-validation-for="@Model.Fields.Count" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label asp-for="@Model.Fields.Price" class="control-label"></label>
+                        <input asp-for="@Model.Fields.Price" class="form-control" id="price1" type="number"/>
+                        <span asp-validation-for="@Model.Fields.Price" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
         </form>
+
     </div>
 </div>
-
 <div>
+    
+    <a href="#" id="filldetails" onclick="Add()">Add</a>
+    <br />
+    <a onclick="Send()">Create</a>
+    <br />
+   @* <a onclick="GetProds()"> olololololololo</a>*@
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

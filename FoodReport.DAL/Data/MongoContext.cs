@@ -19,14 +19,46 @@ namespace FoodReport.DAL.Data
         {
             get
             {
-                return _database.GetCollection<Product>("Products");
+                try
+                {
+                    return _database.GetCollection<Product>("Products");
+                }
+                catch
+                {
+                    _database.CreateCollection("Products");
+                    return _database.GetCollection<Product>("Products");
+                }
             }
         }
         public IMongoCollection<Report> Reports
         {
             get
             {
-                return _database.GetCollection<Report>("Reports");
+                try
+                {
+                    return _database.GetCollection<Report>("Reports");
+                }
+                catch
+                {
+                    _database.CreateCollection("Reports");
+                    return _database.GetCollection<Report>("Reports");
+                }
+            }
+        }
+
+        public IMongoCollection<User> Users
+        {
+            get
+            {
+                try
+                {
+                    return _database.GetCollection<User>("Users");
+                }
+                catch
+                {
+                    _database.CreateCollection("Users");
+                    return _database.GetCollection<User>("Users");
+                }
             }
         }
     }

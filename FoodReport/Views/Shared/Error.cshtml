@@ -9,6 +9,7 @@
 @if (Model.ShowRequestId)
 {
     <p>
+        <strong>@ViewData["Error"]</strong>
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }

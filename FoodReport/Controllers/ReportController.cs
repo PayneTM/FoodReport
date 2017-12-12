@@ -1,66 +1,85 @@
-﻿using FoodReport.DAL.Interfaces;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Services;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
+using FoodReport.Models.Report;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoodReport.Controllers
 {
+    [Authorize]
+    [Route("api/report/")]
     public class ReportController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISearchService _searchService;
+        private readonly IStatusReportService _statusReportService;
 
-        public ReportController(IOptions<Settings> options)
+        public ReportController(IUnitOfWork unitOfWork, ISearchService searchService, IStatusReportService statusReportService)
         {
-            _unitOfWork = new UnitOfWork(options);
+            _unitOfWork = unitOfWork;
+            _searchService = searchService;
+            _statusReportService = statusReportService;
+
         }
 
-        // GET: Report
+        [HttpGet("all")]
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.Reports().GetAll());
+            var result = await _unitOfWork.Reports().GetAll();
+            return View(result);
         }
 
-        // GET: Report/Details/5
+        [HttpGet("details/{id}")]
+
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var report = await _unitOfWork.Reports().Get(id) ?? new Report();
-            if (report == null)
+            var item = new EditReportViewModel();
+            try
+            {
+                item.Products = await _unitOfWork.Products().GetAll();
+                item.Report = await _unitOfWork.Reports().Get(id);
+            }
+            catch
             {
                 return NotFound();
             }
-
-            return View(report);
+            return View(item);
         }
 
-        // GET: Report/Create
-        public IActionResult Create()
+        [Route("create")]
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var result = new CreateReportViewModel
+            {
+                Products = await _unitOfWork.Products().GetAll()
+            };
+            return View(result);
         }
 
-        // POST: Report/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Count,Description,TotalPrice,Date,Owner,Id")] Report report)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] List<Field> field)
         {
             if (ModelState.IsValid)
             {
-                await _unitOfWork.Reports().Add(report);
+                await _statusReportService.onCreateStatus(field, User.Identity.Name);
                 return RedirectToAction(nameof(Index));
             }
-            return View(report);
+            return View(field);
         }
 
-        // GET: Report/Edit/5
+        [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -68,22 +87,22 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
 
-            var report = await _unitOfWork.Reports().Get(id);
-            if (report == null)
+            var item = new EditReportViewModel
+            {
+                Report = await _unitOfWork.Reports().Get(id),
+                Products = await _unitOfWork.Products().GetAll()
+            };
+            if (item == null)
             {
                 return NotFound();
             }
-            return View(report);
+            return View(item);
         }
 
-        // POST: Report/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Count,Description,TotalPrice,Date,Owner,Id")] Report report)
+        [HttpPost("edit/{id}")]
+        public async Task<IActionResult> Edit([FromBody] ChangeDataReportViewModel item)
         {
-            if (id != report.Id)
+            if (item == null)
             {
                 return NotFound();
             }
@@ -92,25 +111,18 @@ namespace FoodReport.Controllers
             {
                 try
                 {
-                    await _unitOfWork.Reports().Update(id,report);
+                    await _statusReportService.onEditStatus(item, User.Identity.Name);
                 }
-                catch //(DbUpdateConcurrencyException)
+                catch
                 {
-                    //if (!ReportExists(report.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
+                    throw new Exception();
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(report);
+            return View(nameof(Edit));
         }
 
-        // GET: Report/Delete/5
+        [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -127,18 +139,34 @@ namespace FoodReport.Controllers
             return View(report);
         }
 
-        // POST: Report/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost("delete/{id}"), ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await _unitOfWork.Reports().Remove(id);
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool ReportExists(string id)
-        //{
-        //    return _context.Report.Any(e => e.Id == id);
-        //}
+        [Authorize(Roles ="Admin")]
+        [HttpPost("approve/{id}")]
+        public async Task<IActionResult> ChangeStatus([FromBody] ChangeStatusViewModel item)
+        {
+            if (item == null) throw new NullReferenceException();
+            try
+            {
+                await _statusReportService.onApproveStatus(item, User.Identity.Name);
+                return Ok();
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Search(string criteria, string value)
+        {
+            var result = await _searchService.Report().Search(criteria, value);
+            ViewData["Message"] = result.Message;
+            return View(result.List);
+        }
     }
 }

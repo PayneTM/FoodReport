@@ -18,7 +18,7 @@ namespace FoodReport.DAL.Repos
             _context = new MongoContext(settings);
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAll(string id = null)
         {
             try
             {
@@ -27,7 +27,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -44,7 +43,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -53,11 +51,10 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                await _context.Products.InsertOneAsync(item);
+               await _context.Products.InsertOneAsync(item);
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -75,7 +72,6 @@ namespace FoodReport.DAL.Repos
             }
             catch (Exception ex)
             {
-                // log or manage the exception
                 throw ex;
             }
         }
@@ -84,6 +80,9 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
+                if(! await IsExisting("Name", item.Name))
+                {
+
                 ReplaceOneResult actionResult
                     = await _context.Products
                                     .ReplaceOneAsync(n => n.Id.Equals(id)
@@ -91,10 +90,29 @@ namespace FoodReport.DAL.Repos
                                             , new UpdateOptions { IsUpsert = true });
                 return actionResult.IsAcknowledged
                     && actionResult.ModifiedCount > 0;
+                }
+                return false;
             }
             catch (Exception ex)
             {
-                // log or manage the exception
+                throw ex;
+            }
+        }
+
+        private async Task<bool> IsExisting(string param, string search)
+        {
+            var filter = Builders<Product>.Filter.Eq(param, search);
+
+            try
+            {
+                var item = await _context.Products
+                                .Find(filter)
+                                .FirstOrDefaultAsync();
+                if (item != null) return true;
+                else return false;
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

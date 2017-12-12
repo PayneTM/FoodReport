@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
+<strong>@ViewData["Error"]</strong>
 
 <h2>Details</h2>
 
@@ -17,35 +18,11 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Available)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Available)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Unit)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Unit)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Provider)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Provider)
         </dd>
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>*@
     </dl>
 </div>
 <div>

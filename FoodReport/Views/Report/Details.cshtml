@@ -1,48 +1,139 @@
-﻿@model FoodReport.DAL.Models.Report
-
+﻿@model FoodReport.Models.Report.EditReportViewModel
+<script src="~/js/ReportDetails.js"></script>
 @{
     ViewData["Title"] = "Details";
+    var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
+       .ToList();
 }
+<strong>@ViewData["Error"]</strong>
 
 <h2>Details</h2>
 
 <div>
     <h4>Report</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Count)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Count)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalPrice)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalPrice)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Owner)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Owner)
-        </dd>
-    </dl>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label>Product</label>
+                </th>
+                <th>
+                    <label>Count</label>
+                </th>
+                <th>
+                    <label>Price</label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (User.Identity.Name == Model.Report.Owner)
+            {
+                @foreach (var item in Model.Report.List)
+                {
+                    <tr>
+                        <td>
+                            @*<div class="col-sm-4">*@
+                                @*<input class="form-control" type="text" value=@item.Product />*@
+                                <select class="form-control" asp-for="@item.Product"
+                                        asp-items="@list">
+                                    @*<option>Please select one</option>*@
+                                </select>
+                                @*</div>*@
+</td>
+                        <td>
+                            <input class="form-control" type="text" value=@item.Count />
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" value=@item.Price />
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                @foreach (var item in Model.Report.List)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product)
+                        </td>
+                        <td>
+
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
 </div>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Report.Owner)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Report.Owner)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Report.Status)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Report.Status)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Report.Date)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Report.Date)
+    </dd>
+    @if (Model.Report.isEdited)
+    {
+        <dt>
+            @Html.DisplayNameFor(model => model.Report.isEdited)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Report.LastEdited)
+        </dd>
+        <dt>
+            Edited by
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Report.EditedBy)
+        </dd>
+    }
+    @if (Model.Report.Message != null)
+    {
+        <dt>
+            Reason
+        </dt>
+        <dd>
+            <div>
+                @Html.DisplayFor(model => model.Report.Message)
+            </div>
+        </dd>
+    }
+</dl>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @if (User.Identity.Name == Model.Report.Owner)
+    {
+        <a onclick="Save('@Model.Report.Id')">Save</a>
+        <br />
+    }
+    @if(User.IsInRole("Admin"))
+    {
+        <b>Actions: </b>
+        <br />
+        <a onclick="Approve('@Model.Report.Id', '@User.Identity.Name')">Approve</a>
+        <br />
+        <a onclick="RejectForm('@Model.Report.Id', '@User.Identity.Name')">Reject</a>
+    }
+    <br />
+<div id="rej"></div>
+    <br />
     <a asp-action="Index">Back to List</a>
 </div>

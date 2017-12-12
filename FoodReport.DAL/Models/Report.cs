@@ -1,15 +1,18 @@
 ﻿using FoodReport.DAL.Abstractions;
 using System;
+using System.Collections.Generic;
 
 namespace FoodReport.DAL.Models
 {
     public class Report : Entity
     {
-        public int Count { get; set; }
-        public string Description { get; set; }
-        public decimal TotalPrice { get; set; }
-        public DateTime Date { get; set; }
-        public virtual Product Product { get; set; }
+        public List<Field> List { get; set; }
         public string Owner { get; set; }
+        public DateTime Date { get; set; }
+        public string Status { get; set; }
+        public bool isEdited { get; set; }
+        public DateTime LastEdited { get; set; }
+        public string EditedBy { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -3,57 +3,66 @@
 @{
     ViewData["Title"] = "Index";
 }
+<strong>@ViewData["Error"]</strong>
 
 <h2>Index</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
+
 </p>
+<form asp-action="Search" method="get">
+    <select name="criteria">
+        <option>owner</option>
+        <option>date</option>
+        <option>status</option>
+    </select>
+    <input type="text" name="value" />
+    <input type="submit" value="search" />
+</form>
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Count)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TotalPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Owner)
-                </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Count)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Search" asp-route-criteria="date" asp-route-value="@item.Date.ToShortDateString()">
+                        @item.Date.ToShortDateString()
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Search" asp-route-criteria="owner" asp-route-value="@item.Owner">
+                        @item.Owner
+                    </a>
+
+                </td>
+                <td>
+                    <a asp-action="Search" asp-route-criteria="status" asp-route-value="@item.Status">
+                        @item.Status
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"> Details </a>
+                    @if (item.Owner == User.Identity.Name)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
+                    }
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

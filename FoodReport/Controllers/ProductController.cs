@@ -1,32 +1,43 @@
-﻿using System;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.DAL.Interfaces;
+using FoodReport.DAL.Models;
+using FoodReport.DAL.Repos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using FoodReport.DAL.Models;
-using FoodReport.DAL.Interfaces;
-using FoodReport.DAL.Repos;
-using Microsoft.Extensions.Options;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodReport.Controllers
 {
+    [Authorize]
     [Route("api/product")]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ISearchService _searchService;
 
-        public ProductController(IOptions<Settings> options)
+        public ProductController(IUnitOfWork unitOfWork, ISearchService searchService)
         {
-            _unitOfWork = new UnitOfWork(options);
+            _unitOfWork = unitOfWork;
+            _searchService = searchService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> Index()
         {
-            var result = await GetProductInternal();
-            return View(result);
+            try
+            {
+                var result = await GetProductInternal();
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Error"] = ex.Message;
+                return View();
+            }
         }
 
         private async Task<IEnumerable<Product>> GetProductInternal()
@@ -34,14 +45,13 @@ namespace FoodReport.Controllers
             return await _unitOfWork.Products().GetAll();
         }
 
-        // GET api/notes/5
         [Route("details")]
         public IActionResult Details() => View();
 
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            return View( await GetNoteByIdInternal(id));
+            return View(await GetNoteByIdInternal(id));
         }
 
         private async Task<Product> GetNoteByIdInternal(string id)
@@ -49,20 +59,27 @@ namespace FoodReport.Controllers
             return await _unitOfWork.Products().Get(id) ?? new Product();
         }
         [Route("create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
-        //POST api/notes
         [HttpPost("create")]
-        public IActionResult Create([Bind("Name,Available,Unit,Price,Provider")]Product item)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(Product item)
         {
-            _unitOfWork.Products().Add(item);
+            var products = await _unitOfWork.Products().GetAll() as List<Product>;
+            if (products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+            {
+                return RedirectToAction(nameof(Create));
+            }
+            await _unitOfWork.Products().Add(item);
             return RedirectToAction(nameof(Index));
         }
 
-        // PUT api/notes/5
         [Route("edit/{id}")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(string id)
 
         {
@@ -80,21 +97,16 @@ namespace FoodReport.Controllers
         }
 
         [HttpPost("edit/{id}")]
-        public IActionResult Edit([Bind("Id,Name,Available,Unit,Price,Provider")]Product item)
+        [Authorize(Roles = "Admin")]
+
+        public IActionResult Edit(Product item)
         {
-            _unitOfWork.Products().Update(item.Id,item);
+            _unitOfWork.Products().Update(item.Id, item);
             return RedirectToAction(nameof(Index));
         }
 
-        // DELETE api/notes/5
-        //[Route("delete/{id}")]
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    await _unitOfWork.Products().Remove(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         [Route("delete")]
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Delete(string id)
         {
@@ -114,13 +126,34 @@ namespace FoodReport.Controllers
 
         // POST: TodoListElements/Delete/5
         [HttpPost("delete"), ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await _unitOfWork.Products().Remove(id);
-            //    return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet("prodsjson")]
+        public async Task<JsonResult> GetProdsJson()
+        {
+            return Json(await _unitOfWork.Products().GetAll());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string criteria, string value)
+        {
+            try
+            {
+                var result = await _searchService.Product().Search(criteria, value);
+                ViewData["Message"] = result.Message;
+                return View(result.List);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Error"] = ex.Message;
+                return View();
+            }
+        }
     }
 }

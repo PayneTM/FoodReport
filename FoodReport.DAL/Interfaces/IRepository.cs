@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Interfaces
 {
     public interface IRepository<T>
     {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAll(string id = null);
         Task<T> Get(string id);
         Task<bool> Remove(string id);
         Task<bool> Update(string id, T item);

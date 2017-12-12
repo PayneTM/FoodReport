@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FoodReport.Models;
 using Microsoft.AspNetCore.Mvc;
-using FoodReport.Models;
+using System.Diagnostics;
 
 namespace FoodReport.Controllers
 {
+
     public class HomeController : Controller
     {
         public IActionResult Index()

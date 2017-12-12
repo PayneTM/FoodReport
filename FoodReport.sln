@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodReport", "FoodReport\FoodReport.csproj", "{6B64121F-B6AC-448F-ADFC-4CD70BB78F48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodReport", "FoodReport\FoodReport.csproj", "{6B64121F-B6AC-448F-ADFC-4CD70BB78F48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodReport.DAL", "FoodReport.DAL\FoodReport.DAL.csproj", "{CD17B86A-0408-4A4C-83C7-19B500A7768C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodReport.DAL", "FoodReport.DAL\FoodReport.DAL.csproj", "{CD17B86A-0408-4A4C-83C7-19B500A7768C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodReport.BLL", "FoodReport.BLL\FoodReport.BLL.csproj", "{6014D166-D28C-46BA-AFCB-9A23F3435460}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CD17B86A-0408-4A4C-83C7-19B500A7768C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD17B86A-0408-4A4C-83C7-19B500A7768C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD17B86A-0408-4A4C-83C7-19B500A7768C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6014D166-D28C-46BA-AFCB-9A23F3435460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6014D166-D28C-46BA-AFCB-9A23F3435460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6014D166-D28C-46BA-AFCB-9A23F3435460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6014D166-D28C-46BA-AFCB-9A23F3435460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
