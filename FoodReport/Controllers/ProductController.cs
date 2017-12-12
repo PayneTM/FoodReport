@@ -45,19 +45,6 @@ namespace FoodReport.Controllers
             return await _unitOfWork.Products().GetAll();
         }
 
-        [Route("details")]
-        public IActionResult Details() => View();
-
-        [HttpGet("details/{id}")]
-        public async Task<IActionResult> Details(string id)
-        {
-            return View(await GetNoteByIdInternal(id));
-        }
-
-        private async Task<Product> GetNoteByIdInternal(string id)
-        {
-            return await _unitOfWork.Products().Get(id) ?? new Product();
-        }
         [Route("create")]
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -68,12 +55,15 @@ namespace FoodReport.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Product item)
         {
-            var products = await _unitOfWork.Products().GetAll() as List<Product>;
-            if (products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Create));
+                var products = await _unitOfWork.Products().GetAll() as List<Product>;
+                if (products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+                {
+                    return RedirectToAction(nameof(Create));
+                }
+                await _unitOfWork.Products().Add(item);
             }
-            await _unitOfWork.Products().Add(item);
             return RedirectToAction(nameof(Index));
         }
 
@@ -101,7 +91,10 @@ namespace FoodReport.Controllers
 
         public IActionResult Edit(Product item)
         {
-            _unitOfWork.Products().Update(item.Id, item);
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Products().Update(item.Id, item);
+            }
             return RedirectToAction(nameof(Index));
         }
 

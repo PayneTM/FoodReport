@@ -2,7 +2,9 @@
 <link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css" />
 
 <h2>@ViewData["Message"]</h2>
-<strong>@ViewData["Error"]</strong>
+<h2>@ViewData["Error"]</h2>
+@if(ViewData["Error"] == null)
+{
 
 <table class="table">
     <thead>
@@ -52,3 +54,4 @@
         }
     </tbody>
 </table>
+}

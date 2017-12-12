@@ -8,9 +8,12 @@ namespace FoodReport.DAL.Models
     {
         public string Id = Guid.NewGuid().ToString();
         [RegularExpression(@"\d+(\.|,)?\d*", ErrorMessage = "Wrong data!")]
+        [Required]
         public int Count { get; set; }
         [RegularExpression(@"\d+(\.|,)?\d*", ErrorMessage = "Wrong data!")]
+        [Required]
         public decimal Price { get; set; }
+        [Required]
         public string Product { get; set; }
     }
 }

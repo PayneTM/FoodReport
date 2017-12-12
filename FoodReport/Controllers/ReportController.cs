@@ -80,7 +80,7 @@ namespace FoodReport.Controllers
             }
             return View(field);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
@@ -101,6 +101,7 @@ namespace FoodReport.Controllers
             return View(item);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit([FromBody] ChangeDataReportViewModel item)
         {
@@ -123,7 +124,7 @@ namespace FoodReport.Controllers
             }
             return View(nameof(Edit));
         }
-
+        [Authorize(Roles = "Admin")]
         [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -140,7 +141,7 @@ namespace FoodReport.Controllers
 
             return View(report);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("delete/{id}"), ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
@@ -166,9 +167,17 @@ namespace FoodReport.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> Search(string criteria, string value)
         {
-            var result = await _searchService.Report().Search(criteria, value);
-            ViewData["Message"] = result.Message;
-            return View(result.List);
+            try
+            {
+                var result = await _searchService.Report().Search(criteria, value);
+                ViewData["Message"] = result.Message;
+                return View(result.List);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Error"] = ex.Message;
+                return View();
+            }
         }
         [HttpGet("refresh")]
         public IActionResult Refresh()
