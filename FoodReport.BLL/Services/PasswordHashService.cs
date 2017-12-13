@@ -12,10 +12,7 @@ namespace FoodReport.BLL.Services
         private byte[] Salt = new byte[128 / 8];
         public PasswordHashService()
         {
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(Salt);
-            }
+            Salt = Convert.FromBase64String("QVm9ws5UMvwFV5No2rta/A==");
         }
         public string HashPassword(string password)
         {
@@ -27,6 +24,8 @@ namespace FoodReport.BLL.Services
                 prf: KeyDerivationPrf.HMACSHA1,
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
+            var wtf = Convert.ToBase64String(Salt);
+            var fu = Convert.FromBase64String(wtf);
             return hashed;
         }
 

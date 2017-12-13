@@ -1,15 +1,11 @@
 ﻿using FoodReport.BLL.Interfaces;
-using FoodReport.BLL.Services;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
-using FoodReport.DAL.Repos;
 using FoodReport.Models.Report;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoodReport.Controllers

@@ -61,5 +61,20 @@ namespace FoodReport.DAL.Data
                 }
             }
         }
+        public IMongoCollection<Role> Roles
+        {
+            get
+            {
+                try
+                {
+                    return _database.GetCollection<Role>("Roles");
+                }
+                catch
+                {
+                    _database.CreateCollection("Roles");
+                    return _database.GetCollection<Role>("Roles");
+                }
+            }
+        }
     }
 }

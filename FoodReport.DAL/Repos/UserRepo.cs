@@ -52,7 +52,7 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                item.Role = "User";
+                //item.Role = "User";
                 await _context.Users.InsertOneAsync(item);
             }
             catch (Exception ex)
