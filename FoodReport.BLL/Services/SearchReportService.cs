@@ -36,15 +36,15 @@ namespace FoodReport.BLL.Services
             switch (criteria.ToLower())
             {
                 case "owner":
-                    model.List = report.Where(x => x.Owner.ToLower() == value.ToLower());
+                    model.List = report.Where(x => x.Owner.ToLower().Contains(value.ToLower()));
                     model.Message = "Your result for name - " + value;
                     break;
                 case "date":
-                    model.List = report.Where(x => x.Date.ToShortDateString() == value);
+                    model.List = report.Where(x => x.Date.ToShortDateString().Contains(value.ToLower()));
                     model.Message = "Your result for date - " + value;
                     break;
                 case "status":
-                    model.List = report.Where(x => x.Status.ToLower() == value.ToLower());
+                    model.List = report.Where(x => x.Status.ToLower().Contains(value.ToLower()));
                     model.Message = "Your result for status - " + value;
                     break;
                 default: throw new Exception(criteria + " - wrong criteria");

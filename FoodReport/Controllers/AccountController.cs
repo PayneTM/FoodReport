@@ -1,4 +1,5 @@
-﻿using FoodReport.DAL.Interfaces;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
 using FoodReport.Models.Account;
@@ -17,9 +18,11 @@ namespace FoodReport.Controllers
     public class AccountController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        public AccountController(IOptions<Settings> options)
+        private IPasswordHasher _passwordHasher;
+        public AccountController(IOptions<Settings> options, IPasswordHasher passwordHasher)
         {
             _unitOfWork = new UnitOfWork(options);
+            _passwordHasher = passwordHasher;
         }
         [HttpGet]
         public IActionResult Login()
@@ -32,7 +35,7 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _unitOfWork.Users().Get(item.Email, item.Password);
+                User user = await _unitOfWork.Users().Get(item.Email, _passwordHasher.HashPassword(item.Password));
                 if (user != null)
                 {
                     await Authenticate(item.Email, user.Role);
@@ -54,10 +57,10 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _unitOfWork.Users().Get(model.Email, model.Password);
+                User user = await _unitOfWork.Users().Get(model.Email, _passwordHasher.HashPassword(model.Password));
                 if (user == null)
                 {
-                    await _unitOfWork.Users().Add(new User { Email = model.Email, Password = model.Password, Role = "User"});
+                    await _unitOfWork.Users().Add(new User { Email = model.Email, Password = _passwordHasher.HashPassword(model.Password), Role = "User"});
 
                     await Authenticate(model.Email,"User");
 

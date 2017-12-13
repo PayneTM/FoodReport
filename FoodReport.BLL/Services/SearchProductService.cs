@@ -35,11 +35,11 @@ namespace FoodReport.BLL.Services
             switch (criteria.ToLower())
             {
                 case "provider":
-                    model.List = product.Where(x => x.Provider.ToLower() == value.ToLower());
+                    model.List = product.Where(x => x.Provider.ToLower().Contains(value.ToLower()));
                     model.Message = "Your result for provider - " + value;
                     break;
                 case "name":
-                    model.List = product.Where(x => x.Name.ToLower() == value.ToLower());
+                    model.List = product.Where(x => x.Name.ToLower().Contains(value.ToLower()));
                     model.Message = "Your result for name - " + value;
                     break;
                 default: throw new Exception(criteria + " - wrong criteria");

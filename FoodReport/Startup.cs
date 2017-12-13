@@ -43,6 +43,8 @@ namespace FoodReport
             services.AddTransient<ISearchReport, SearchReportService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IStatusReportService, StatusReportService>();
+            services.AddSingleton<IPasswordHasher, PasswordHashService>();
+
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options => //CookieAuthenticationOptions
@@ -52,7 +54,7 @@ namespace FoodReport
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<Settings> options)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<Settings> options, IPasswordHasher passwordHasher)
         {
             if (env.IsDevelopment())
             {
@@ -73,7 +75,7 @@ namespace FoodReport
                     name: "default",
                     template: "{controller=Report}/{action=Index}/{id?}");
             });
-            var Db = new InitMongoDb(options);
+            var Db = new InitMongoDbService(options, passwordHasher);
             Db.Init();
         }
     }
