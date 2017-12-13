@@ -1,4 +1,5 @@
 ﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.Models.Report;
@@ -18,13 +19,18 @@ namespace FoodReport.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISearchService _searchService;
         private readonly IStatusReportService _statusReportService;
+        private readonly ISummaryReport<SummaryModel> _summaryReportService;
 
-        public ReportController(IUnitOfWork unitOfWork, ISearchService searchService, IStatusReportService statusReportService)
+        public ReportController(
+            IUnitOfWork unitOfWork, 
+            ISearchService searchService, 
+            IStatusReportService statusReportService,
+            ISummaryReport<SummaryModel> summaryReport)
         {
             _unitOfWork = unitOfWork;
             _searchService = searchService;
             _statusReportService = statusReportService;
-
+            _summaryReportService = summaryReport;
         }
 
         [HttpGet("all")]
@@ -180,6 +186,19 @@ namespace FoodReport.Controllers
         {
             return RedirectToAction("Index", "Report");
         }
-
+        [HttpGet("summary/month/{month}")]
+        public async Task<IActionResult> Summary(int month)
+        {
+            try
+            {
+                var result = await _summaryReportService.ByMonth(month);
+                //return RedirectToAction("Index");
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

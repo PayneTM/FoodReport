@@ -1,0 +1,60 @@
+﻿@model FoodReport.BLL.Models.SummaryModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<strong>@ViewData["Error"]</strong>
+
+<h2>Report</h2>
+
+<p>
+    <a class="btn btn-default" asp-action="Create">Create New</a>
+
+    <a class="btn btn-default" asp-action="GetSummary" asp-route-month="12">Summary</a>
+
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Product
+            </th>
+            <th>
+                Count
+            </th>
+            <th>
+               Price
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.List)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product)
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+
+        }
+        <tr>
+            <th>Total count</th>
+            <th></th>
+            <th>Total price</th>
+        </tr>
+        <tr>
+            <td>@Model.TotalCount</td>
+            <td></td>
+            <td>@Model.TotalSum</td>
+        </tr>
+    </tbody>
+</table>

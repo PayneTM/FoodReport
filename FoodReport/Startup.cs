@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodReport.Models;
 using FoodReport.BLL.Interfaces;
 using FoodReport.BLL.Services;
+using FoodReport.BLL.Models;
 
 namespace FoodReport
 {
@@ -43,6 +44,8 @@ namespace FoodReport
             services.AddTransient<ISearchReport, SearchReportService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IStatusReportService, StatusReportService>();
+            services.AddTransient<ISummaryReport<SummaryModel>, SummaryReportService>();
+
             services.AddTransient<IRoleRepo, RoleRepo>();
             services.AddSingleton<IPasswordHasher, PasswordHashService>();
 
