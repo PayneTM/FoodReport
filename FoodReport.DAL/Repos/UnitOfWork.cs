@@ -9,6 +9,8 @@ namespace FoodReport.DAL.Repos
         private IProductRepository _productRepository;
         private IReportRepository _reportRepository;
         private IUserRepo _userRepository;
+        private IRoleRepo _roleRepo;
+
 
         private readonly IOptions<Settings> _settings;
         public UnitOfWork(IOptions<Settings> settings)
@@ -28,6 +30,10 @@ namespace FoodReport.DAL.Repos
         public IUserRepo Users()
         {
             return _userRepository ?? (_userRepository = new UserRepo(_settings));
+        }
+        public IRoleRepo Roles()
+        {
+            return _roleRepo ?? (_roleRepo = new RoleRepo(_settings));
         }
     }
 }

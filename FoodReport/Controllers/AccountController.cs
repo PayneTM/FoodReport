@@ -60,9 +60,10 @@ namespace FoodReport.Controllers
                 User user = await _unitOfWork.Users().Get(model.Email, _passwordHasher.HashPassword(model.Password));
                 if (user == null)
                 {
-                    await _unitOfWork.Users().Add(new User { Email = model.Email, Password = _passwordHasher.HashPassword(model.Password), Role = "User"});
+                    var role = await _unitOfWork.Roles().FindRoleByName("User");
+                    await _unitOfWork.Users().Add(new User { Email = model.Email, Password = _passwordHasher.HashPassword(model.Password), Role = role.Name});
 
-                    await Authenticate(model.Email,"User");
+                    await Authenticate(model.Email,role.Name);
 
                     return RedirectToAction("Index", "Report");
                 }

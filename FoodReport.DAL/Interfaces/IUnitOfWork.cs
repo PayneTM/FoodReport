@@ -5,5 +5,6 @@
         IProductRepository Products();
         IReportRepository Reports();
 		IUserRepo Users();
+        IRoleRepo Roles();
     }
 }

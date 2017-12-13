@@ -43,6 +43,7 @@ namespace FoodReport
             services.AddTransient<ISearchReport, SearchReportService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IStatusReportService, StatusReportService>();
+            services.AddTransient<IRoleRepo, RoleRepo>();
             services.AddSingleton<IPasswordHasher, PasswordHashService>();
 
 
