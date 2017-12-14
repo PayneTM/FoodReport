@@ -186,13 +186,12 @@ namespace FoodReport.Controllers
         {
             return RedirectToAction("Index", "Report");
         }
-        [HttpGet("summary/month/{month}")]
-        public async Task<IActionResult> Summary(int month)
+        [HttpGet("summary")]
+        public async Task<IActionResult> Summary(DateTime fromdate, DateTime todate)
         {
             try
             {
-                var result = await _summaryReportService.ByMonth(month);
-                //return RedirectToAction("Index");
+                var result = await _summaryReportService.CreateSummary(fromdate,todate);
                 return View(result);
             }
             catch (Exception ex)

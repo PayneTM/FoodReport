@@ -7,8 +7,6 @@ namespace FoodReport.BLL.Interfaces
 {
     public interface ISummaryReport<T>
     {
-        Task ByDate(int date);
-        Task<T> ByMonth(int month);
-        Task ByYear(int year);
+        Task<T> CreateSummary(DateTime fromDate, DateTime toDate);
     }
 }

@@ -1,4 +1,6 @@
-﻿using FoodReport.DAL.Data;
+﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Models;
+using FoodReport.BLL.Services;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
@@ -8,11 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
-using FoodReport.Models;
-using FoodReport.BLL.Interfaces;
-using FoodReport.BLL.Services;
-using FoodReport.BLL.Models;
 
 namespace FoodReport
 {
@@ -79,8 +76,8 @@ namespace FoodReport
                     name: "default",
                     template: "{controller=Report}/{action=Index}/{id?}");
             });
-            var Db = new InitMongoDbService(options, passwordHasher);
-            Db.Init();
+            var db = new InitMongoDbService(options, passwordHasher);
+            db.Init();
         }
     }
 }

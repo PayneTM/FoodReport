@@ -5,7 +5,6 @@ using FoodReport.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Services
@@ -18,19 +17,31 @@ namespace FoodReport.BLL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task ByDate(int date)
+        private async Task<IEnumerable<Report>> FindReports(DateTime from, DateTime to)
         {
-            throw new NotImplementedException();
+            var reports = await _unitOfWork.Reports().GetAll();
+            var list = reports.Where(x => x.Date.CompareTo(from) >= 0 && x.Date.CompareTo(to) <= 0 && x.Status == "Approved");
+            return list;
         }
 
-        public async Task<SummaryModel> ByMonth(int month)
+        public async Task<SummaryModel> CreateSummary(DateTime fromDate, DateTime toDate)
         {
-            if (month < 1 || month > 12)
+            IEnumerable<Report> list;
+            var wtf = fromDate.CompareTo(toDate);
+            if (wtf < 0)
             {
-                throw new Exception("Wrong month!");
+                list = await FindReports(fromDate, toDate);
             }
-            var reports = await _unitOfWork.Reports().GetAll();
-            var list = reports.Where(x => x.Date.Month == month && x.Status == "Approved");
+            else if (wtf > 0)
+            {
+                list = await FindReports(toDate, fromDate);
+            }
+            else
+            {
+                list = await FindReports(fromDate, fromDate);
+            }
+            if (list == null) throw new NullReferenceException("There are no approved reports between these dates");
+
             var result = new SummaryModel();
             //for each report in list of approved reports
             foreach (var report in list)
@@ -40,39 +51,34 @@ namespace FoodReport.BLL.Services
                 {
                     if (result.List == null)
                     {
-                        result.List = new List<Field>();
-                        result.List.Add(item);
+                        result.List = new List<Field> { item };
                         result.TotalCount++;
-                        result.TotalSum += item.Price;
+                        result.TotalSum += item.Price * item.Count;
                     }
-                    else if (result.List != null)
+                    else
                     {
+                        var isFieldExists = result.List.Exists(x => x.Product == item.Product);
+                        if (isFieldExists)
+                        {
+                            var field = result.List.FirstOrDefault(x => x.Product == item.Product);
+                            var index = result.List.FindIndex(x=>x.Equals(field));
+
+                                field.Price += item.Price * item.Count;
+                                field.Count += item.Count;
+                                result.List[index] = field;
+                                result.TotalSum += item.Price * item.Count;
+                        }
                         //if false, add to summary report this field without changes
-                        if (!result.List.Exists(x => x.Product == item.Product))
+                        else
                         {
                             result.List.Add(item);
                             result.TotalCount++;
-                            result.TotalSum += item.Price;
-                        }
-                        //otherwise 
-                        else if (result.List.Contains(result.List.FirstOrDefault(x => x.Product == item.Product)))
-                        {
-                            var newfield = result.List.FirstOrDefault(x => x.Product == item.Product);
-                            newfield.Price += item.Price;
-                            newfield.Count += item.Count;
-                            var index = result.List.FindIndex(x => x.Product == item.Product);
-                            result.List[index] = newfield;
-                            result.TotalSum += item.Price;
+                            result.TotalSum += item.Price * item.Count;
                         }
                     }
                 }
             }
             return result;
-        }
-
-        public Task ByYear(int year)
-        {
-            throw new NotImplementedException();
         }
     }
 }
