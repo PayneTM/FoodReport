@@ -17,8 +17,8 @@ namespace FoodReport.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private IUnitOfWork _unitOfWork;
-        private IPasswordHasher _passwordHasher;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPasswordHasher _passwordHasher;
         public AccountController(IOptions<Settings> options, IPasswordHasher passwordHasher)
         {
             _unitOfWork = new UnitOfWork(options);
@@ -55,21 +55,18 @@ namespace FoodReport.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var user = await _unitOfWork.Users().Get(model.Email, _passwordHasher.HashPassword(model.Password));
+            if (user == null)
             {
-                User user = await _unitOfWork.Users().Get(model.Email, _passwordHasher.HashPassword(model.Password));
-                if (user == null)
-                {
-                    var role = await _unitOfWork.Roles().FindRoleByName("User");
-                    await _unitOfWork.Users().Add(new User { Email = model.Email, Password = _passwordHasher.HashPassword(model.Password), Role = role.Name});
+                var role = await _unitOfWork.Roles().FindRoleByName("User");
+                await _unitOfWork.Users().Add(new User { Email = model.Email, Password = _passwordHasher.HashPassword(model.Password), Role = role.Name});
 
-                    await Authenticate(model.Email,role.Name);
+                await Authenticate(model.Email,role.Name);
 
-                    return RedirectToAction("Index", "Report");
-                }
-                else
-                    ModelState.AddModelError("", "Wrong username or password!");
+                return RedirectToAction("Index", "Report");
             }
+            ModelState.AddModelError("", "Wrong username or password!");
             return View(model);
         }
 
@@ -80,7 +77,7 @@ namespace FoodReport.Controllers
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
