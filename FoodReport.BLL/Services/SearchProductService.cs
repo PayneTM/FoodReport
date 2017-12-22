@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using FoodReport.BLL.Interfaces.Search;
 using System;
 using System.Collections.Generic;
 using System.Text;

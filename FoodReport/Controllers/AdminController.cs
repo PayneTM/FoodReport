@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.Models.Admin;
@@ -15,14 +15,12 @@ namespace FoodReport.Controllers
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ISearchService _searchService;
         private readonly IPasswordHasher _passwordHasher;
 
 
-        public AdminController(IUnitOfWork unitOfWork, ISearchService searchService, IPasswordHasher passwordHasher)
+        public AdminController(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
         {
             _unitOfWork = unitOfWork;
-            _searchService = searchService;
             _passwordHasher = passwordHasher;
         }
         [HttpGet("users")]
@@ -90,7 +88,16 @@ namespace FoodReport.Controllers
             var user = await _unitOfWork.Users().Get(id);
             if (user != null)
             {
-                var result = await _unitOfWork.Users().Remove(user.Id);
+                try
+                {
+                await _unitOfWork.Users().Remove(user.Id);
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
             return RedirectToAction("Index");
         }
@@ -175,7 +182,7 @@ namespace FoodReport.Controllers
                     item.Role = "User";
                     await _unitOfWork.Users().Update(item.Id, item);
                 }
-                var result = await _unitOfWork.Roles().Remove(id);
+                await _unitOfWork.Roles().Remove(id);
             }
             catch (Exception ex)
             {

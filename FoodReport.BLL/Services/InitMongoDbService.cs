@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.DAL.Data;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;

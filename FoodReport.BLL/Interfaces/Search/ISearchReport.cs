@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodReport.BLL.Interfaces
+namespace FoodReport.BLL.Interfaces.Search
 {
-    public interface ISearchService
+    public interface ISearchReport : ISearchEntity<SearchModel<Report>>
     {
-        ISearchProduct Product();
-        ISearchReport Report();
     }
 }

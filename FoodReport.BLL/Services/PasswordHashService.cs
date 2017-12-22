@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using FoodReport.BLL.Interfaces.PasswordHashing;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;

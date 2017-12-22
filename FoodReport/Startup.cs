@@ -1,4 +1,8 @@
 ﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Interfaces.Search;
+using FoodReport.BLL.Interfaces.Status;
+using FoodReport.BLL.Interfaces.PasswordHashing;
+using FoodReport.BLL.Interfaces.Auth;
 using FoodReport.BLL.Models;
 using FoodReport.BLL.Services;
 using FoodReport.DAL.Interfaces;

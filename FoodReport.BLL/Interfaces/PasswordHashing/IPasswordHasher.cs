@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FoodReport.BLL.Interfaces
+namespace FoodReport.BLL.Interfaces.PasswordHashing
 {
     public interface IPasswordHasher
     {

@@ -1,4 +1,6 @@
 ﻿using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Interfaces.Search;
+using FoodReport.BLL.Interfaces.Status;
 using FoodReport.BLL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
@@ -80,28 +82,24 @@ namespace FoodReport.Controllers
                 await _statusReportService.onCreateStatus(field, User.Identity.Name);
                 return RedirectToAction(nameof(Index));
             }
-            return View(field);
+            return View();
         }
-        [Authorize(Roles = "Admin")]
-        [HttpGet("edit/{id}")]
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
+        //[HttpGet("edit/{id}")]
+        //public async Task<IActionResult> Edit(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var item = new EditReportViewModel
-            {
-                Report = await _unitOfWork.Reports().Get(id),
-                Products = await _unitOfWork.Products().GetAll()
-            };
-            if (item == null)
-            {
-                return NotFound();
-            }
-            return View(item);
-        }
+        //    new EditReportViewModel
+        //    {
+        //        Report = await _unitOfWork.Reports().Get(id),
+        //        Products = await _unitOfWork.Products().GetAll()
+        //    };
+        //    return RedirectToAction("Index", "Report");
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpPost("edit/{id}")]
@@ -124,7 +122,7 @@ namespace FoodReport.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(nameof(Edit));
+            return RedirectToAction("Index", "Report");
         }
         [Authorize(Roles = "Admin")]
         [Route("delete/{id}")]
@@ -196,7 +194,8 @@ namespace FoodReport.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
     }

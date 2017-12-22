@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FoodReport.BLL.Interfaces
+namespace FoodReport.BLL.Interfaces.Status
 {
     public interface IStatusService<T>
     {

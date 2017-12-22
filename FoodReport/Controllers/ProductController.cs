@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using FoodReport.BLL.Interfaces.Search;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -54,12 +54,19 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                var products = await _unitOfWork.Products().GetAll() as List<Product>;
-                if (products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+                try
                 {
-                    return RedirectToAction(nameof(Create));
+                    if (await _unitOfWork.Products().GetAll() is List<Product> products && products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
+                    {
+                        return RedirectToAction(nameof(Create));
+                    }
+                    await _unitOfWork.Products().Add(item);
                 }
-                await _unitOfWork.Products().Add(item);
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
             return RedirectToAction(nameof(Index));
         }
