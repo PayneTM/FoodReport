@@ -9,6 +9,6 @@ namespace FoodReport.BLL.Interfaces.UserManager
         Task Delete(string id);
         Task<TUser> GetById(string id);
         Task<TUser> GetByName(string name);
-        Task<TUser> PasswordValidate(string password);
+        Task<TUser> PasswordValidate(TUser user);
     }
 }

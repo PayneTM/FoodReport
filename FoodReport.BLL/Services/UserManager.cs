@@ -82,9 +82,18 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public Task<IUser> PasswordValidate(string password)
+        public async Task<IUser> PasswordValidate(IUser user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _unitOfWork.Users().Get(user.Email, _passwordHasher.HashPassword(user.Password));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

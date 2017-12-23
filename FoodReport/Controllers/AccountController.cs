@@ -1,32 +1,31 @@
-﻿using FoodReport.BLL.Interfaces.PasswordHashing;
-using FoodReport.DAL.Interfaces;
+﻿using AutoMapper;
+using FoodReport.BLL.Interfaces.PasswordHashing;
+using FoodReport.BLL.Interfaces.UserManager;
+using FoodReport.Common.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using FoodReport.BLL.Interfaces.UserManager;
 
 namespace FoodReport.Controllers
 {
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly IMapper _mapper;
         private readonly ICustomUserManager _userManager;
-        public AccountController(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher, IMapper mapper, ICustomUserManager userManager)
+        private readonly IMapper _mapper;
+        public AccountController(IPasswordHasher passwordHasher, ICustomUserManager userManager, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
-            _mapper = mapper;
             _userManager = userManager;
+            _mapper = mapper;
         }
         [HttpGet]
         public IActionResult Login()
@@ -39,14 +38,24 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _unitOfWork.Users().Get(item.Email, _passwordHasher.HashPassword(item.Password));
-                if (user != null)
+                var usr = _mapper.Map<LoginViewModel, IUser>(item);
+                try
                 {
-                    await Authenticate(item.Email, user.Role);
+                    usr = await _userManager.PasswordValidate(usr);
+                    if (usr != null)
+                    {
+                        await Authenticate(item.Email, usr.Role);
 
-                    return RedirectToAction("Index", "Report");
+                        return RedirectToAction("Index", "Report");
+                    }
+
                 }
-                ModelState.AddModelError("", "Wrong username or password!");
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    ModelState.AddModelError("", "Wrong username or password!");
+                    throw;
+                }
             }
             return View(item);
         }
