@@ -1,8 +1,8 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using AutoMapper;
+using FoodReport.BLL.Interfaces;
 using FoodReport.BLL.Interfaces.Search;
 using FoodReport.BLL.Interfaces.Status;
 using FoodReport.BLL.Interfaces.PasswordHashing;
-using FoodReport.BLL.Interfaces.Auth;
 using FoodReport.BLL.Models;
 using FoodReport.BLL.Services;
 using FoodReport.DAL.Interfaces;
@@ -37,6 +37,7 @@ namespace FoodReport
                 options.Database
                     = Configuration.GetSection("MongoConnection:Database").Value;
             });
+            services.AddAutoMapper();
             services.AddTransient<IProductRepository, ProductRepo>();
             services.AddTransient<IReportRepository, ReportRepo>();
             services.AddTransient<IUserRepo, UserRepo>();
