@@ -10,4 +10,8 @@
     <PackageReference Include="MongoDB.Driver.GridFS" Version="2.4.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FoodReport.Interfaces\FoodReport.Common.csproj" />
+  </ItemGroup>
+
 </Project>

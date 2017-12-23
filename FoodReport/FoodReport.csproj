@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodReport.BLL\FoodReport.BLL.csproj" />
     <ProjectReference Include="..\FoodReport.DAL\FoodReport.DAL.csproj" />
+    <ProjectReference Include="..\FoodReport.Interfaces\FoodReport.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

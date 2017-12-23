@@ -10,6 +10,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodReport.DAL\FoodReport.DAL.csproj" />
+    <ProjectReference Include="..\FoodReport.Interfaces\FoodReport.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\UserManager\" />
   </ItemGroup>
 
 </Project>
