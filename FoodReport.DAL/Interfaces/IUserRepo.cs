@@ -5,6 +5,6 @@ namespace FoodReport.DAL.Interfaces
 {
     public interface IUserRepo : IRepository<User>
     {
-        Task<User> Get(string email, string password);
+        Task<User> GetByEmail(string email);
     }
 }

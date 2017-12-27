@@ -23,7 +23,7 @@ namespace FoodReport.BLL.Services
         {
             try
             {
-                var result = await _unitOfWork.Users().Get(user.Email, _passwordHasher.HashPassword(user.Password));
+                var result = await _unitOfWork.Users().GetByEmail(user.Email);
                 if (result == null)
                 {
                     var userRole = await _unitOfWork.Roles().FindRoleByName(role);
@@ -86,8 +86,9 @@ namespace FoodReport.BLL.Services
         {
             try
             {
-                return await _unitOfWork.Users().Get(user.Email, _passwordHasher.HashPassword(user.Password));
-
+                var usr = await _unitOfWork.Users().GetByEmail(user.Email);
+                var pswd = _passwordHasher.HashPassword(user.Password);
+                return usr.Password == pswd ? usr : null;
             }
             catch (Exception e)
             {

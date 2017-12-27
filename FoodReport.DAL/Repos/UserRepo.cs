@@ -50,10 +50,17 @@ namespace FoodReport.DAL.Repos
 
         public async Task Add(User item)
         {
+            var filter = Builders<User>.Filter.Eq("Email", item.Email);
+
             try
             {
-                //item.Role = "User";
-                await _context.Users.InsertOneAsync(item);
+                 var usr = await _context.Users
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
+                if (usr == null)
+                {
+                    await _context.Users.InsertOneAsync(item);
+                }
             }
             catch (Exception ex)
             {
@@ -96,7 +103,7 @@ namespace FoodReport.DAL.Repos
             }
         }
 
-        public async Task<User> Get(string email, string password)
+        public async Task<User> GetByEmail(string email)
         {
             var filter = Builders<User>.Filter.Eq("Email", email);
 
@@ -105,13 +112,14 @@ namespace FoodReport.DAL.Repos
                 var usr = await _context.Users
                                 .Find(filter)
                                 .FirstOrDefaultAsync();
-                if (usr.Password == password) return usr;
-                return null;
+                //if (usr.Password == password) return usr;
+                return usr;
             }
             catch 
             {
                 return null;
             }
+
         }
     }
 }
