@@ -7,49 +7,58 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces.UserManager;
 
 namespace FoodReport.Controllers
 {
     [Route("api/admin")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly ICustomUserManager _userManager;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHasher _passwordHasher;
 
-
-        public AdminController(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
+        public AdminController(ICustomUserManager userManager, IUnitOfWork unitOfWork)
         {
+            _userManager = userManager;
             _unitOfWork = unitOfWork;
-            _passwordHasher = passwordHasher;
         }
+
         [HttpGet("users")]
-        public async Task<IActionResult> Index() => View( await _unitOfWork.Users().GetAll());
+        public async Task<IActionResult> Index() => View(await _userManager.GetAllUsers());
+
         [HttpGet("users/create")]
-        public async Task<IActionResult> CreateUser() => View(new CreateUserViewModel { Roles = await _unitOfWork.Roles().GetAll()});
+        public async Task<IActionResult> CreateUser() => View(new CreateUserViewModel { Roles = await _unitOfWork.Roles().GetAll() });
 
         [HttpPost("users/create")]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = model.User.Email, Password = _passwordHasher.HashPassword(model.User.Password),Role = model.User.Role};
                 try
                 {
-                    await _unitOfWork.Users().Add(user);
+                    await _userManager.Create(
+                        new User
+                        {
+                            Email = model.User.Email,
+                            Password = model.User.Password
+                        },
+                        role: model.User.Role);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(model);
                 }
             }
+            ModelState.AddModelError(string.Empty, "Wrong data!");
             return View(model);
         }
         [HttpGet("users/edit/{id}")]
         public async Task<IActionResult> EditUser(string id)
         {
-            var user = await _unitOfWork.Users().Get(id);
+            var user = await _userManager.GetById(id);
             if (user == null)
             {
                 return NotFound();
@@ -85,26 +94,21 @@ namespace FoodReport.Controllers
         [HttpPost("users/delete/{id}")]
         public async Task<ActionResult> DeleteUser(string id)
         {
-            var user = await _unitOfWork.Users().Get(id);
-            if (user != null)
+            try
             {
-                try
-                {
-                await _unitOfWork.Users().Remove(user.Id);
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                await _userManager.Delete(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
             return RedirectToAction("Index");
         }
         [HttpGet("users/changepass/{id}")]
         public async Task<IActionResult> ChangePassword(string id)
         {
-            var user = await _unitOfWork.Users().Get(id);
+            var user = await _userManager.GetById(id);
             if (user == null)
             {
                 return NotFound();
@@ -118,20 +122,14 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _unitOfWork.Users().Get(model.Id);
-
-                if (user != null)
+                try
                 {
-                    try
-                    {
-                        user.Password = _passwordHasher.HashPassword(model.NewPassword);
-                        await _unitOfWork.Users().Update(user.Id, user);
-                        return RedirectToAction("Index");
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError(string.Empty, ex.Message);
-                    }
+                    await _userManager.ChangePassword(model.Id, model.NewPassword);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
             else
@@ -175,12 +173,11 @@ namespace FoodReport.Controllers
             }
             try
             {
-                var users = await _unitOfWork.Users().GetAll();
+                var users = await _userManager.GetAllUsers();
                 var list = users.Where(x => x.Role == role.Name);
                 foreach (var item in list)
                 {
-                    item.Role = "User";
-                    await _unitOfWork.Users().Update(item.Id, item);
+                    await _userManager.ChangeRole(item.Id, role: "User");
                 }
                 await _unitOfWork.Roles().Remove(id);
             }

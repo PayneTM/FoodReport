@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.Common.Interfaces;
 
 namespace FoodReport.BLL.Interfaces.UserManager
 {
@@ -11,5 +13,6 @@ namespace FoodReport.BLL.Interfaces.UserManager
         Task<TUser> GetByName(string name);
         Task<TUser> GetByEmail(string email);
         Task<TUser> PasswordValidate(TUser user);
+        Task<IEnumerable<IUser>> GetAllUsers();
     }
 }

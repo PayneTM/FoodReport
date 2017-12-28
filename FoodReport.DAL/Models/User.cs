@@ -1,7 +1,9 @@
-﻿using FoodReport.Common.Interfaces;
+﻿using System;
+using FoodReport.Common.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
+using FoodReport.DAL.Abstractions;
 
 namespace FoodReport.DAL.Models
 {
@@ -9,7 +11,7 @@ namespace FoodReport.DAL.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
         [Required]
         public string Email { get; set; }
         [Required]

@@ -1,7 +1,10 @@
-﻿using FoodReport.BLL.Interfaces.UserManager;
+﻿using System;
+using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.DAL.Data;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
 
 namespace FoodReport.BLL.Services

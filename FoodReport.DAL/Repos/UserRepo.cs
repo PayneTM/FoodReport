@@ -113,7 +113,6 @@ namespace FoodReport.DAL.Repos
                 var usr = await _context.Users
                                 .Find(filter)
                                 .FirstOrDefaultAsync();
-                //if (usr.Password == password) return usr;
                 return usr;
             }
             catch 

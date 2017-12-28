@@ -4,6 +4,7 @@ using FoodReport.Common.Interfaces;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,14 +26,16 @@ namespace FoodReport.BLL.Services
             {
                 var result = await _unitOfWork.Users().GetByEmail(user.Email);
                 if (result != null) throw new Exception("Email already used");
-                var usr = new User
-                {
-                    Email = user.Email,
-                    Password = _passwordHasher.HashPassword(user.Password),
-                    Role = role
-                };
-                await _unitOfWork.Users().Add(usr);
-                return usr;
+                user.Password = _passwordHasher.HashPassword(user.Password);
+                user.Role = role;
+                //var usr = new User
+                //{
+                //    Email = user.Email,
+                //    Password = _passwordHasher.HashPassword(user.Password),
+                //    Role = role
+                //};
+                await _unitOfWork.Users().Add(user);
+                return user;
             }
             catch (Exception e)
             {
@@ -132,6 +135,19 @@ namespace FoodReport.BLL.Services
                 var usr = await GetByEmail(user.Email);
                 var pswd = _passwordHasher.HashPassword(user.Password);
                 return usr.Password == pswd ? usr : throw new Exception("Email or password not match");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<IUser>> GetAllUsers()
+        {
+            try
+            {
+                return await _unitOfWork.Users().GetAll();
             }
             catch (Exception e)
             {
