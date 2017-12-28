@@ -1,4 +1,5 @@
-﻿using FoodReport.DAL.Models;
+﻿using FoodReport.Common.Interfaces;
+using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -46,18 +47,18 @@ namespace FoodReport.DAL.Data
             }
         }
 
-        public IMongoCollection<User> Users
+        public IMongoCollection<IUser> Users
         {
             get
             {
                 try
                 {
-                    return _database.GetCollection<User>("Users");
+                    return _database.GetCollection<IUser>("Users");
                 }
                 catch
                 {
                     _database.CreateCollection("Users");
-                    return _database.GetCollection<User>("Users");
+                    return _database.GetCollection<IUser>("Users");
                 }
             }
         }

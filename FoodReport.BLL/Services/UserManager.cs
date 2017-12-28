@@ -9,7 +9,7 @@ using FoodReport.DAL.Models;
 
 namespace FoodReport.BLL.Services
 {
-    public class UserManager //: ICustomUserManager
+    public class UserManager : ICustomUserManager
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
@@ -42,18 +42,33 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public Task Edit(IUser user, string id)
+        public async Task Edit(IUser user, string id)
         {
-            //if(id == null || user == null) throw new Exception("Invalid parameters");
-            //var usr = await GetById(id);
-            //await _unitOfWork.Users().Update(id, usr);
-            throw new NotImplementedException();
-
+            try
+            {
+                if (id == null || user == null || user.Id != id) throw new Exception("Invalid parameters");
+                await _unitOfWork.Users().Update(id, user);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
-        public Task Delete(string id)
+        public async Task Delete(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (id == null) throw new ArgumentNullException();
+                var result = await _unitOfWork.Users().Remove(id);
+                if (result == false) throw new Exception("User not found");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
         public async Task<IUser> GetById(string id)
@@ -65,6 +80,19 @@ namespace FoodReport.BLL.Services
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<IUser> GetByName(string name)
+        {
+            try
+            {
+                return await GetByEmail(name);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 throw;
             }
         }
@@ -88,7 +116,7 @@ namespace FoodReport.BLL.Services
             {
                 var list = await _unitOfWork.Users().GetAll();
                 var usr = list.FirstOrDefault(x => x.Email == email);
-                if(usr == null) throw new Exception("User not found");
+                if (usr == null) throw new Exception("User not found");
                 return usr;
             }
             catch (Exception e)
@@ -97,6 +125,7 @@ namespace FoodReport.BLL.Services
                 throw;
             }
         }
+
         public async Task<IUser> PasswordValidate(IUser user)
         {
             try
@@ -104,6 +133,74 @@ namespace FoodReport.BLL.Services
                 var usr = await GetByEmail(user.Email);
                 var pswd = _passwordHasher.HashPassword(user.Password);
                 return usr.Password == pswd ? usr : throw new Exception("Email or password not match");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public async Task ChangePassword(string id, string password)
+        {
+            try
+            {
+                if (id == null || password == null) throw new ArgumentNullException();
+                var usr = await GetById(id);
+                IUser user = new User
+                {
+                    Email = usr.Email,
+                    Role = usr.Role,
+                    Id = usr.Id,
+                    Password = _passwordHasher.HashPassword(password)
+                };
+                await Edit(user, id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public async Task ChangeEmail(string id, string email)
+        {
+            try
+            {
+                if (id == null || email == null) throw new ArgumentNullException();
+                var usr = await GetById(id);
+                IUser user = new User
+                {
+                    Email = email,
+                    Role = usr.Role,
+                    Id = usr.Id,
+                    Password = usr.Password
+                };
+                await Edit(user, id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public async Task ChangeRole(string id, string role)
+        {
+            try
+            {
+                if (id == null || role == null) throw new ArgumentNullException();
+                var userRole = await _unitOfWork.Roles().FindRoleByName(role);
+                if (userRole == null) throw new Exception("There is no this role");
+                var usr = await GetById(id);
+                IUser user = new User
+                {
+                    Email = usr.Email,
+                    Role = userRole.Name,
+                    Id = usr.Id,
+                    Password = usr.Password
+                };
+                await Edit(user, id);
             }
             catch (Exception e)
             {
