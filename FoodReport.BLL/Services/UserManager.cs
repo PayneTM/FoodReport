@@ -1,11 +1,11 @@
 ﻿using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.BLL.Interfaces.UserManager;
+using FoodReport.Common.Interfaces;
 using FoodReport.DAL.Interfaces;
+using FoodReport.DAL.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FoodReport.Common.Interfaces;
-using FoodReport.DAL.Models;
 
 namespace FoodReport.BLL.Services
 {
@@ -25,12 +25,11 @@ namespace FoodReport.BLL.Services
             {
                 var result = await _unitOfWork.Users().GetByEmail(user.Email);
                 if (result != null) throw new Exception("Email already used");
-                var userRole = await _unitOfWork.Roles().FindRoleByName(role);
                 var usr = new User
                 {
                     Email = user.Email,
                     Password = _passwordHasher.HashPassword(user.Password),
-                    Role = userRole.Name
+                    Role = role
                 };
                 await _unitOfWork.Users().Add(usr);
                 return usr;
@@ -190,13 +189,13 @@ namespace FoodReport.BLL.Services
             try
             {
                 if (id == null || role == null) throw new ArgumentNullException();
-                var userRole = await _unitOfWork.Roles().FindRoleByName(role);
-                if (userRole == null) throw new Exception("There is no this role");
+                //var userRole = await _unitOfWork.Roles().FindRoleByName(role);
+                //if (userRole == null) throw new Exception("There is no this role");
                 var usr = await GetById(id);
                 IUser user = new User
                 {
                     Email = usr.Email,
-                    Role = userRole.Name,
+                    Role = role,
                     Id = usr.Id,
                     Password = usr.Password
                 };

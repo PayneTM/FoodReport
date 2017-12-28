@@ -1,22 +1,19 @@
-﻿using FoodReport.BLL.Interfaces.PasswordHashing;
+﻿using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.DAL.Data;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FoodReport.BLL.Services
 {
     public class InitMongoDbService
     {
-        private MongoContext _context;
-        private readonly IPasswordHasher _passwordHasher;
-        public InitMongoDbService(IOptions<Settings> options, IPasswordHasher passwordHasher)
+        private readonly MongoContext _context;
+        private readonly ICustomUserManager _userManager;
+        public InitMongoDbService(IOptions<Settings> options, ICustomUserManager userManager)
         {
             _context = new MongoContext(options);
-            _passwordHasher = passwordHasher;
+            _userManager = userManager;
         }
         private async void InsertRole(Role role,string field, string value)
         {
@@ -45,21 +42,12 @@ namespace FoodReport.BLL.Services
             };
             InsertRole(userRole, "Name", userRole.Name);
 
-            var odmen = new User
+            await _userManager.Create(new User
             {
                 Email = "admin@ad",
-                Password = _passwordHasher.HashPassword("admin"),
-                Role = adminRole.Name
-            };
-            var filter = Builders<User>.Filter.Eq("Email", odmen.Email);
-
-            var usr = await _context.Users
-                             .Find(filter)
-                             .FirstOrDefaultAsync();
-            if (usr == null)
-            {
-                await _context.Users.InsertOneAsync(odmen);
-            }
+                Password = "admin",
+            }, 
+            role: adminRole.Name);
         }
     }
 }

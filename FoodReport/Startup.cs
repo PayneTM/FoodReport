@@ -65,7 +65,7 @@ namespace FoodReport
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<Settings> options, IPasswordHasher passwordHasher)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<Settings> options, ICustomUserManager userManager)
         {
             if (env.IsDevelopment())
             {
@@ -86,7 +86,7 @@ namespace FoodReport
                     name: "default",
                     template: "{controller=Report}/{action=Index}/{id?}");
             });
-            var db = new InitMongoDbService(options, passwordHasher);
+            var db = new InitMongoDbService(options, userManager);
             db.Init();
         }
     }

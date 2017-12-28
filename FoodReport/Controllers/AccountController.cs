@@ -18,12 +18,10 @@ namespace FoodReport.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly IPasswordHasher _passwordHasher;
         private readonly ICustomUserManager _userManager;
         private readonly IMapper _mapper;
-        public AccountController(IPasswordHasher passwordHasher, ICustomUserManager userManager, IMapper mapper)
+        public AccountController(ICustomUserManager userManager, IMapper mapper)
         {
-            _passwordHasher = passwordHasher;
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -44,7 +42,7 @@ namespace FoodReport.Controllers
                     usr = await _userManager.PasswordValidate(usr);
                     if (usr != null)
                     {
-                        await Authenticate(item.Email, usr.Role);
+                        await Authenticate(usr.Email, usr.Role);
 
                         return RedirectToAction("Index", "Report");
                     }
@@ -54,7 +52,7 @@ namespace FoodReport.Controllers
                 {
                     Console.WriteLine(e);
                     ModelState.AddModelError("", "Wrong username or password!");
-                    throw;
+                    //throw;
                 }
             }
             return View(item);
@@ -70,16 +68,16 @@ namespace FoodReport.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             try
-            {
+            { 
                 var usr = await _userManager.Create(
                     new User
                     {
                         Email = model.Email,
-                        Password = _passwordHasher.HashPassword(model.Password)
+                        Password = model.Password
                     },
                     role: "User"
                 );
-                await Authenticate(model.Email, usr.Role);
+                await Authenticate(usr.Email, usr.Role);
 
                 return RedirectToAction("Index", "Report");
             }
