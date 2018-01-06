@@ -162,15 +162,15 @@ namespace FoodReport.BLL.Services
             {
             //todo: rename variables usr and user
                 if (id == null || password == null) throw new ArgumentNullException();
-                var usr = await GetById(id);
-                var user = new User
+                var oldUsr = await GetById(id);
+                var newUser = new User
                 {
-                    Email = usr.Email,
-                    Role = usr.Role,
-                    Id = usr.Id,
+                    Email = oldUsr.Email,
+                    Role = oldUsr.Role,
+                    Id = oldUsr.Id,
                     Password = _passwordHasher.HashPassword(password)
                 };
-                await Edit(user, id);
+                await Edit(newUser, id);
             }
             catch (Exception e)
             {
@@ -212,14 +212,15 @@ namespace FoodReport.BLL.Services
                 //todo: rename variables usr and user
 
                 var usr = await GetById(id);
-                var user = new User
-                {
-                    Email = usr.Email,
-                    Role = role,
-                    Id = usr.Id,
-                    Password = usr.Password
-                };
-                await Edit(user, id);
+                usr.Role = role;
+                //var user = new User
+                //{
+                //    Email = usr.Email,
+                //    Role = role,
+                //    Id = usr.Id,
+                //    Password = usr.Password
+                //};
+                await Edit(usr, id);
             }
             catch (Exception e)
             {

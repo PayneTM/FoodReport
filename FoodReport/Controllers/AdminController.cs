@@ -1,4 +1,4 @@
-﻿using FoodReport.BLL.Interfaces.PasswordHashing;
+﻿using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.Models.Admin;
@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FoodReport.BLL.Interfaces.UserManager;
 
 namespace FoodReport.Controllers
 {
@@ -28,7 +27,11 @@ namespace FoodReport.Controllers
         public async Task<IActionResult> Index() => View(await _userManager.GetAllUsers());
 
         [HttpGet("users/create")]
-        public async Task<IActionResult> CreateUser() => View(new CreateUserViewModel { Roles = await _unitOfWork.Roles().GetAll() });
+        public async Task<IActionResult> CreateUser() => View(
+            new CreateUserViewModel
+            {
+                Roles = await _unitOfWork.Roles().GetAll()
+            });
 
         [HttpPost("users/create")]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
@@ -59,10 +62,7 @@ namespace FoodReport.Controllers
         public async Task<IActionResult> EditUser(string id)
         {
             var user = await _userManager.GetById(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
             var model = new EditUserViewModel { Id = user.Id, Email = user.Email, Role = user.Role };
             return View(model);
         }
@@ -72,20 +72,21 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _unitOfWork.Users().Get(model.Id);
-                if (user != null)
+                try
                 {
-                    user.Email = model.Email;
+                    var user = await _userManager.GetById(model.Id);
+                    if (user == null) return View(model);
 
-                    try
-                    {
-                        await _unitOfWork.Users().Update(user.Id, user);
-                        return RedirectToAction("Index");
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError(string.Empty, ex.Message);
-                    }
+                    user.Email = model.Email;
+                    user.Role = model.Role;
+
+                    await _userManager.Edit(user, user.Id);
+                    return RedirectToAction("Index");
+
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
             return View(model);

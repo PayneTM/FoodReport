@@ -1,13 +1,11 @@
-﻿using FoodReport.DAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FoodReport.DAL.Data;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
-using System.Threading.Tasks;
-using FoodReport.Common.Interfaces;
-using FoodReport.DAL.Data;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Repos
 {

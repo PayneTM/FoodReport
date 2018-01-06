@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.BLL.Interfaces.UserManager;
-using FoodReport.Common.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.Models.Account;
 using Microsoft.AspNetCore.Authentication;
@@ -31,7 +29,6 @@ namespace FoodReport.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel item)
         {
             if (ModelState.IsValid)
@@ -52,7 +49,6 @@ namespace FoodReport.Controllers
                 {
                     Console.WriteLine(e);
                     ModelState.AddModelError("", "Wrong username or password!");
-                    //throw;
                 }
             }
             return View(item);
@@ -63,7 +59,6 @@ namespace FoodReport.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
