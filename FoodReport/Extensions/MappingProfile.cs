@@ -11,8 +11,8 @@ namespace FoodReport.Extensions
     {
         public MappingProfile()
         {
-            CreateMap<LoginViewModel, IUser>();
-            CreateMap<EditUserViewModel, IUser>();
+            CreateMap<LoginViewModel, User>();
+            CreateMap<EditUserViewModel, User>();
         }
     }
 }

@@ -4,8 +4,8 @@ using FoodReport.Common.Interfaces;
 
 namespace FoodReport.DAL.Interfaces
 {
-    public interface IUserRepo : IRepository<IUser>
+    public interface IUserRepo : IRepository<User>
     {
-        Task<IUser> GetByEmail(string email);
+        Task<User> GetByEmail(string email);
     }
 }

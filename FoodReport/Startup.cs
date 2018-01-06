@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using FoodReport.BLL.Interfaces;
+using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.BLL.Interfaces.Search;
 using FoodReport.BLL.Interfaces.Status;
-using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.BLL.Models;
 using FoodReport.BLL.Services;
-using FoodReport.Common.Interfaces;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
@@ -52,7 +51,7 @@ namespace FoodReport
 
             services.AddTransient<IRoleRepo, RoleRepo>();
             services.AddSingleton<IPasswordHasher, PasswordHashService>();
-            services.AddTransient<IUser, User>();
+            //services.AddTransient<IUser, User>();
             services.AddTransient<ICustomUserManager, UserManager>();
 
 

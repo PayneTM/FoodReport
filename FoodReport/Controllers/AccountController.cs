@@ -36,7 +36,7 @@ namespace FoodReport.Controllers
         {
             if (ModelState.IsValid)
             {
-                var usr = _mapper.Map<LoginViewModel, IUser>(item);
+                var usr = _mapper.Map<LoginViewModel, User>(item);
                 try
                 {
                     usr = await _userManager.PasswordValidate(usr);

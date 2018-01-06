@@ -20,7 +20,7 @@ namespace FoodReport.BLL.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<IUser> Create(IUser user, string role)
+        public async Task<User> Create(User user, string role)
         {
             try
             {
@@ -40,11 +40,11 @@ namespace FoodReport.BLL.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
+                throw e;
             }
         }
 
-        public async Task Edit(IUser user, string id)
+        public async Task Edit(User user, string id)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace FoodReport.BLL.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                throw;
+                throw e;
             }
         }
 
@@ -73,7 +73,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> GetById(string id)
+        public async Task<User> GetById(string id)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> GetByName(string name)
+        public async Task<User> GetByName(string name)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
             #region [*Doubts*]
             //??????????????????????
@@ -128,7 +128,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> PasswordValidate(IUser user)
+        public async Task<User> PasswordValidate(User user)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IEnumerable<IUser>> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
             try
             {
@@ -160,9 +160,10 @@ namespace FoodReport.BLL.Services
         {
             try
             {
+            //todo: rename variables usr and user
                 if (id == null || password == null) throw new ArgumentNullException();
                 var usr = await GetById(id);
-                IUser user = new User
+                var user = new User
                 {
                     Email = usr.Email,
                     Role = usr.Role,
@@ -182,9 +183,10 @@ namespace FoodReport.BLL.Services
         {
             try
             {
+                //todo: rename variables usr and user
                 if (id == null || email == null) throw new ArgumentNullException();
                 var usr = await GetById(id);
-                IUser user = new User
+                var user = new User
                 {
                     Email = email,
                     Role = usr.Role,
@@ -207,8 +209,10 @@ namespace FoodReport.BLL.Services
                 if (id == null || role == null) throw new ArgumentNullException();
                 //var userRole = await _unitOfWork.Roles().FindRoleByName(role);
                 //if (userRole == null) throw new Exception("There is no this role");
+                //todo: rename variables usr and user
+
                 var usr = await GetById(id);
-                IUser user = new User
+                var user = new User
                 {
                     Email = usr.Email,
                     Role = role,

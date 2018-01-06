@@ -20,7 +20,7 @@ namespace FoodReport.DAL.Repos
             _context = new MongoContext(settings);
         }
 
-        public async Task<IEnumerable<IUser>> GetAll(string id = null)
+        public async Task<IEnumerable<User>> GetAll(string id = null)
         {
             try
             {
@@ -33,9 +33,9 @@ namespace FoodReport.DAL.Repos
             }
         }
 
-        public async Task<IUser> Get(string id)
+        public async Task<User> Get(string id)
         {
-            var filter = Builders<IUser>.Filter.Eq("Id", id);
+            var filter = Builders<User>.Filter.Eq("Id", id);
 
             try
             {
@@ -49,9 +49,9 @@ namespace FoodReport.DAL.Repos
             }
         }
 
-        public async Task Add(IUser item)
+        public async Task Add(User item)
         {
-            var filter = Builders<IUser>.Filter.Eq("Email", item.Email);
+            var filter = Builders<User>.Filter.Eq("Email", item.Email);
 
             try
             {
@@ -75,7 +75,7 @@ namespace FoodReport.DAL.Repos
             {
                 DeleteResult actionResult
                     = await _context.Users.DeleteOneAsync(
-                        Builders<IUser>.Filter.Eq("Id", id));
+                        Builders<User>.Filter.Eq("Id", id));
 
                 return actionResult.IsAcknowledged
                     && actionResult.DeletedCount > 0;
@@ -86,7 +86,7 @@ namespace FoodReport.DAL.Repos
             }
         }
 
-        public async Task<bool> Update(string id, IUser item)
+        public async Task<bool> Update(string id, User item)
         {
             try
             {
@@ -104,9 +104,9 @@ namespace FoodReport.DAL.Repos
             }
         }
 
-        public async Task<IUser> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
-            var filter = Builders<IUser>.Filter.Eq("Email", email);
+            var filter = Builders<User>.Filter.Eq("Email", email);
 
             try
             {

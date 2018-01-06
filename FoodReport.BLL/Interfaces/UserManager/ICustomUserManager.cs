@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using FoodReport.Common.Interfaces;
+﻿using FoodReport.DAL.Models;
+using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Interfaces.UserManager
 {
-    public interface ICustomUserManager : IUserManager<IUser>
+    public interface ICustomUserManager : IUserManager<User>
     {
         Task ChangePassword(string id, string password);
 

@@ -47,18 +47,18 @@ namespace FoodReport.DAL.Data
             }
         }
 
-        public IMongoCollection<IUser> Users
+        public IMongoCollection<User> Users
         {
             get
             {
                 try
                 {
-                    return _database.GetCollection<IUser>("Users");
+                    return _database.GetCollection<User>("Users");
                 }
                 catch
                 {
                     _database.CreateCollection("Users");
-                    return _database.GetCollection<IUser>("Users");
+                    return _database.GetCollection<User>("Users");
                 }
             }
         }

@@ -4,7 +4,7 @@ using FoodReport.Common.Interfaces;
 
 namespace FoodReport.BLL.Interfaces.UserManager
 {
-    public interface IUserManager<TUser>
+    public interface IUserManager<TUser> where TUser : IUser
     {
         Task<TUser> Create(TUser user, string role);
         Task Edit(TUser user, string id);
@@ -13,6 +13,6 @@ namespace FoodReport.BLL.Interfaces.UserManager
         Task<TUser> GetByName(string name);
         Task<TUser> GetByEmail(string email);
         Task<TUser> PasswordValidate(TUser user);
-        Task<IEnumerable<IUser>> GetAllUsers();
+        Task<IEnumerable<TUser>> GetAllUsers();
     }
 }

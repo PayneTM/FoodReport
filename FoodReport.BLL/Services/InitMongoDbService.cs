@@ -45,12 +45,19 @@ namespace FoodReport.BLL.Services
             };
             InsertRole(userRole, "Name", userRole.Name);
 
-            await _userManager.Create(new User
+            try
             {
-                Email = "admin@ad",
-                Password = "admin",
-            }, 
-            role: adminRole.Name);
+                await _userManager.Create(new User
+                {
+                    Email = "admin@ad",
+                    Password = "admin",
+                },
+                role: adminRole.Name);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
