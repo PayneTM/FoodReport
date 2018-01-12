@@ -1,6 +1,6 @@
-﻿using FoodReport.DAL.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FoodReport.DAL.Abstractions;
 
 namespace FoodReport.DAL.Models
 {

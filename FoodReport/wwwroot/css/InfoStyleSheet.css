@@ -4,17 +4,15 @@
 }
 
 dt {
-    float: left;
     clear: left;
-    width: 100px;
-    text-align: right;
-    font-weight: bold;
     color: black;
+    float: left;
+    font-weight: bold;
+    text-align: right;
+    width: 100px;
 }
 
-    dt::after {
-        content: ":";
-    }
+dt::after { content: ":"; }
 
 dd {
     margin: 0 0 0 110px;

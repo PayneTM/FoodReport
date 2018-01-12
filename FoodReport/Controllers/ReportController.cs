@@ -1,4 +1,7 @@
-﻿using FoodReport.BLL.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces;
 using FoodReport.BLL.Interfaces.Search;
 using FoodReport.BLL.Interfaces.Status;
 using FoodReport.BLL.Models;
@@ -7,9 +10,6 @@ using FoodReport.DAL.Models;
 using FoodReport.Models.Report;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FoodReport.Controllers
 {
@@ -18,14 +18,14 @@ namespace FoodReport.Controllers
     [Route("api/report/")]
     public class ReportController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ISearchService _searchService;
         private readonly IStatusReportService _statusReportService;
         private readonly ISummaryReport<SummaryModel> _summaryReportService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ReportController(
-            IUnitOfWork unitOfWork, 
-            ISearchService searchService, 
+            IUnitOfWork unitOfWork,
+            ISearchService searchService,
             IStatusReportService statusReportService,
             ISummaryReport<SummaryModel> summaryReport)
         {
@@ -44,13 +44,9 @@ namespace FoodReport.Controllers
         }
 
         [HttpGet("details/{id}")]
-
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
             var item = new EditReportViewModel();
             try
             {
@@ -61,6 +57,7 @@ namespace FoodReport.Controllers
             {
                 return NotFound();
             }
+
             return View(item);
         }
 
@@ -82,6 +79,7 @@ namespace FoodReport.Controllers
                 await _statusReportService.onCreateStatus(field, User.Identity.Name);
                 return RedirectToAction(nameof(Index));
             }
+
             return View();
         }
         //[Authorize(Roles = "Admin")]
@@ -105,10 +103,7 @@ namespace FoodReport.Controllers
         [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit([FromBody] ChangeDataReportViewModel item)
         {
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -120,29 +115,28 @@ namespace FoodReport.Controllers
                 {
                     throw new Exception();
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return RedirectToAction("Index", "Report");
         }
+
         [Authorize(Roles = "Admin")]
         [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var report = await _unitOfWork.Reports().Get(id);
-            if (report == null)
-            {
-                return NotFound();
-            }
+            if (report == null) return NotFound();
 
             return View(report);
         }
+
         [Authorize(Roles = "Admin")]
-        [HttpPost("delete/{id}"), ActionName("Delete")]
+        [HttpPost("delete/{id}")]
+        [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             await _unitOfWork.Reports().Remove(id);
@@ -164,6 +158,7 @@ namespace FoodReport.Controllers
                 return NotFound();
             }
         }
+
         [HttpGet("search")]
         public async Task<IActionResult> Search(string criteria, string value)
         {
@@ -179,17 +174,19 @@ namespace FoodReport.Controllers
                 return View();
             }
         }
+
         [HttpGet("refresh")]
         public IActionResult Refresh()
         {
             return RedirectToAction("Index", "Report");
         }
+
         [HttpGet("summary")]
         public async Task<IActionResult> Summary(DateTime fromdate, DateTime todate)
         {
             try
             {
-                var result = await _summaryReportService.CreateSummary(fromdate,todate);
+                var result = await _summaryReportService.CreateSummary(fromdate, todate);
                 return View(result);
             }
             catch (Exception ex)

@@ -1,9 +1,4 @@
 ﻿using FoodReport.BLL.Models;
-using FoodReport.DAL.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FoodReport.Models.Report
 {

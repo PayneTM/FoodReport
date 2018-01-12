@@ -6,7 +6,7 @@ namespace FoodReport.DAL.Data
 {
     public class MongoContext
     {
-        private readonly IMongoDatabase _database = null;
+        private readonly IMongoDatabase _database;
 
         public MongoContext(IOptions<Settings> settings)
         {
@@ -30,6 +30,7 @@ namespace FoodReport.DAL.Data
                 }
             }
         }
+
         public IMongoCollection<Report> Reports
         {
             get
@@ -61,6 +62,7 @@ namespace FoodReport.DAL.Data
                 }
             }
         }
+
         public IMongoCollection<Role> Roles
         {
             get

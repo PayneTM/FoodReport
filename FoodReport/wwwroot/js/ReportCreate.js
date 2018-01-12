@@ -1,6 +1,7 @@
 ﻿var counter = 2;
 var isNewRowAllowed = true;
 var list = [];
+
 function Add() {
     if (NotEmptyInputs()) {
 
@@ -82,8 +83,7 @@ function NotEmptyInputs() {
         if (inputs.item(i).value.length == 0) {
             inputs.item(i).style.borderColor = "red";
             OK = false;
-        }
-        else {
+        } else {
             inputs.item(i).style.borderColor = "silver";
         }
     };
@@ -97,11 +97,11 @@ function Send() {
     var result = [];
     for (var i = 1, j = 0; i < inputs.length; i = i + 2, j++) {
         var field =
-            {
-                product: '',
-                count: 0,
-                price: 0
-            };
+        {
+            product: "",
+            count: 0,
+            price: 0
+        };
         if (j != opt.length) {
             field.product = opt[j].value;
         }
@@ -119,21 +119,24 @@ function Send() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success:
-                window.location.href = '/api/report/refresh'
+                window.location.href = "/api/report/refresh"
         });
 }
+
 function GetProds() {
     var product =
-        {
-            id: "",
-            name: "",
-            provider: "",
-        };
-    $.getJSON("/api/product/prodsjson", product, function (product) {
-        list.push(product);
-    });
+    {
+        id: "",
+        name: "",
+        provider: "",
+    };
+    $.getJSON("/api/product/prodsjson",
+        product,
+        function(product) {
+            list.push(product);
+        });
 }
-window.onload = function ()
-{
+
+window.onload = function() {
     GetProds();
 };

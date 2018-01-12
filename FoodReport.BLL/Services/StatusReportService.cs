@@ -1,23 +1,24 @@
-﻿using FoodReport.BLL.Interfaces.Status;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces.Status;
 using FoodReport.BLL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using FoodReport.DAL.Repos;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Services
 {
     public class StatusReportService : IStatusReportService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public StatusReportService(IOptions<Settings> options)
         {
             _unitOfWork = new UnitOfWork(options);
         }
+
         public async Task onCreateStatus(List<Field> field, string owner)
         {
             var report = new Report
@@ -57,6 +58,7 @@ namespace FoodReport.BLL.Services
                 throw ex;
             }
         }
+
         public async Task onApproveStatus(AdminChangeReportStatus item, string owner)
         {
             try

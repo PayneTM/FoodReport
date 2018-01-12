@@ -1,20 +1,21 @@
 ﻿var isFormAllowed = true;
+
 function Save(itemid) {
     var inputs = document.getElementsByTagName("input");
     var opt = document.getElementsByTagName("select");
 
     var result =
-        {
-            list: [],
-            id: itemid
-        };
+    {
+        list: [],
+        id: itemid
+    };
     for (var i = 1, j = 0; i < inputs.length; i = i + 2, j++) {
         var field =
-            {
-                product: '',
-                count: 0,
-                price: 0
-            };
+        {
+            product: "",
+            count: 0,
+            price: 0
+        };
         if (j != opt.length) {
             field.product = opt[j].value;
         }
@@ -34,14 +35,15 @@ function Save(itemid) {
             success: window.location.href = "/api/report/details/" + itemid
         });
 }
+
 function Approve(userid, admin) {
     var result =
-        {
-            id: userid,
-            status: "Approved",
-            reason: null,
-            adminName: admin
-        };
+    {
+        id: userid,
+        status: "Approved",
+        reason: null,
+        adminName: admin
+    };
     var datar = JSON.stringify(result);
     $.ajax(
         {
@@ -50,9 +52,10 @@ function Approve(userid, admin) {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = '/api/report/refresh/'
+            success: window.location.href = "/api/report/refresh/"
         });
 }
+
 function RejectForm(itemid, admin) {
     if (isFormAllowed == true) {
 
@@ -65,12 +68,12 @@ function RejectForm(itemid, admin) {
         textarea.style.height = "100px";
         var labeel = document.createElement("label");
         labeel.htmlFor = "reason";
-        labeel.innerHTML = "Reason:"
+        labeel.innerHTML = "Reason:";
 
         var send = document.createElement("a");
         send.innerHTML = "Send";
         send.className = "btn btn-default";
-        send.onclick = function () {
+        send.onclick = function() {
             Reject(itemid, admin);
         };
 
@@ -84,14 +87,15 @@ function RejectForm(itemid, admin) {
         isFormAllowed = false;
     }
 }
+
 function Reject(itemid, admin) {
     var result =
-        {
-            id: itemid,
-            status: "Rejected",
-            reason: document.getElementById("reason").value,
-            adminName: admin
-        };
+    {
+        id: itemid,
+        status: "Rejected",
+        reason: document.getElementById("reason").value,
+        adminName: admin
+    };
     var datar = JSON.stringify(result);
     $.ajax(
         {
@@ -100,6 +104,6 @@ function Reject(itemid, admin) {
             data: datar,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: window.location.href = '/api/report/refresh/'
+            success: window.location.href = "/api/report/refresh/"
         });
 }

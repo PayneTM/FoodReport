@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using FoodReport.Common.Interfaces;
-using FoodReport.DAL.Models;
-using FoodReport.Models;
 using FoodReport.Models.Account;
 
 namespace FoodReport.Extensions

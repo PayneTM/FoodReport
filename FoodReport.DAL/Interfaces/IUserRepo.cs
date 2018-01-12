@@ -1,5 +1,5 @@
-﻿using FoodReport.DAL.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using FoodReport.DAL.Models;
 
 namespace FoodReport.DAL.Interfaces
 {

@@ -1,17 +1,17 @@
-﻿using FoodReport.DAL.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.DAL.Data;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Repos
 {
     public class ProductRepo : IProductRepository
     {
-        private readonly MongoContext _context = null;
+        private readonly MongoContext _context;
 
         public ProductRepo(IOptions<Settings> settings)
         {
@@ -23,7 +23,7 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Products
-                        .Find(_ => true).ToListAsync();
+                    .Find(_ => true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -38,8 +38,8 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Products
-                                .Find(filter)
-                                .FirstOrDefaultAsync();
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-               await _context.Products.InsertOneAsync(item);
+                await _context.Products.InsertOneAsync(item);
             }
             catch (Exception ex)
             {
@@ -63,12 +63,12 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                DeleteResult actionResult
+                var actionResult
                     = await _context.Products.DeleteOneAsync(
                         Builders<Product>.Filter.Eq("Id", id));
 
                 return actionResult.IsAcknowledged
-                    && actionResult.DeletedCount > 0;
+                       && actionResult.DeletedCount > 0;
             }
             catch (Exception ex)
             {
@@ -80,17 +80,17 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                if(! await IsExisting("Name", item.Name))
+                if (!await IsExisting("Name", item.Name))
                 {
-
-                ReplaceOneResult actionResult
-                    = await _context.Products
-                                    .ReplaceOneAsync(n => n.Id.Equals(id)
-                                            , item
-                                            , new UpdateOptions { IsUpsert = true });
-                return actionResult.IsAcknowledged
-                    && actionResult.ModifiedCount > 0;
+                    var actionResult
+                        = await _context.Products
+                            .ReplaceOneAsync(n => n.Id.Equals(id)
+                                , item
+                                , new UpdateOptions {IsUpsert = true});
+                    return actionResult.IsAcknowledged
+                           && actionResult.ModifiedCount > 0;
                 }
+
                 return false;
             }
             catch (Exception ex)
@@ -106,10 +106,10 @@ namespace FoodReport.DAL.Repos
             try
             {
                 var item = await _context.Products
-                                .Find(filter)
-                                .FirstOrDefaultAsync();
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
                 if (item != null) return true;
-                else return false;
+                return false;
             }
             catch (Exception ex)
             {

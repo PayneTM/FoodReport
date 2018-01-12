@@ -1,18 +1,18 @@
 ﻿@model FoodReport.Models.Admin.CreateUserViewModel
 @{
     ViewBag.Title = "Add user";
-    var list = Model.Roles.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
-    .ToList();
+    var list = Model.Roles.Select(c => new SelectListItem {Text = c.Name, Value = c.Name})
+        .ToList();
 }
 <form asp-action="CreateUser" asp-controller="Admin">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="@Model.User.Email" class="control-label">Email</label>
-        <input type="text" asp-for="@Model.User.Email" class="form-control" />
+        <input type="text" asp-for="@Model.User.Email" class="form-control"/>
     </div>
     <div class="form-group">
         <label asp-for="@Model.User.Password" class="control-label">Password</label>
-        <input type="text" asp-for="@Model.User.Password" class="form-control" />
+        <input type="text" asp-for="@Model.User.Password" class="form-control"/>
     </div>
     <div class="form-group">
         <label asp-for="@Model.User.Role" class="control-label">Role</label>
@@ -22,6 +22,6 @@
         <span asp-validation-for="@Model.User.Role" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Add" class="btn btn-default" />
+        <input type="submit" value="Add" class="btn btn-default"/>
     </div>
 </form>

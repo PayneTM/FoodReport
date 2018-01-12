@@ -1,5 +1,3 @@
-using System;
-
 namespace FoodReport.Models
 {
     public class ErrorViewModel

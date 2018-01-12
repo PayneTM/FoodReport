@@ -6,38 +6,38 @@
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>
-                    Product
-                </th>
-                <th>
-                    Provider
-                </th>
-                @if (User.IsInRole("Admin"))
-                {
-                    <th></th>
-                }
-            </tr>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Provider
+            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+        </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Provider
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
                     <td>
-                        @item.Name
+                        <a class="btn btn-default" asp-action="Edit" asp-route-id="@item.Id"> Edit </a>
+                        <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
                     </td>
-                    <td>
-                        @item.Provider
-                    </td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <td>
-                            <a class="btn btn-default" asp-action="Edit" asp-route-id="@item.Id"> Edit </a>
-                            <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
-                        </td>
-                    }
-                </tr>
-            }
+                }
+            </tr>
+        }
         </tbody>
     </table>
 }

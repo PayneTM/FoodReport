@@ -1,7 +1,7 @@
-﻿using FoodReport.Common.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using FoodReport.Common.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace FoodReport.DAL.Models
 {
@@ -10,10 +10,11 @@ namespace FoodReport.DAL.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [Required]
-        public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
+
+        [Required] public string Email { get; set; }
+
+        [Required] public string Password { get; set; }
+
         public string Role { get; set; }
     }
 }

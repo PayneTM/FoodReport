@@ -1,18 +1,19 @@
-﻿using FoodReport.BLL.Interfaces.PasswordHashing;
-using FoodReport.BLL.Interfaces.UserManager;
-using FoodReport.DAL.Interfaces;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces.PasswordHashing;
+using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.Common.Interfaces;
+using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 
 namespace FoodReport.BLL.Services
 {
     public class UserManager : ICustomUserManager
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IUnitOfWork _unitOfWork;
+
         public UserManager(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
         {
             _unitOfWork = unitOfWork;
@@ -36,6 +37,7 @@ namespace FoodReport.BLL.Services
                     await _unitOfWork.Users().Add(usr);
                     return usr;
                 }
+
                 throw new Exception();
             }
             catch (Exception e)

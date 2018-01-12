@@ -3,33 +3,30 @@ using FoodReport.DAL.Data;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FoodReport.BLL.Services
 {
     public class InitMongoDbService
     {
-        private MongoContext _context;
+        private readonly MongoContext _context;
         private readonly IPasswordHasher _passwordHasher;
+
         public InitMongoDbService(IOptions<Settings> options, IPasswordHasher passwordHasher)
         {
             _context = new MongoContext(options);
             _passwordHasher = passwordHasher;
         }
-        private async void InsertRole(Role role,string field, string value)
+
+        private async void InsertRole(Role role, string field, string value)
         {
             var filterRole = Builders<Role>.Filter.Eq(field, value);
 
             var usr = await _context.Roles
-                             .Find(filterRole)
-                             .FirstOrDefaultAsync();
-            if (usr == null)
-            {
-                await _context.Roles.InsertOneAsync(role);
-            }
+                .Find(filterRole)
+                .FirstOrDefaultAsync();
+            if (usr == null) await _context.Roles.InsertOneAsync(role);
         }
+
         public async void Init()
         {
             var adminRole = new Role
@@ -54,12 +51,9 @@ namespace FoodReport.BLL.Services
             var filter = Builders<User>.Filter.Eq("Email", odmen.Email);
 
             var usr = await _context.Users
-                             .Find(filter)
-                             .FirstOrDefaultAsync();
-            if (usr == null)
-            {
-                await _context.Users.InsertOneAsync(odmen);
-            }
+                .Find(filter)
+                .FirstOrDefaultAsync();
+            if (usr == null) await _context.Users.InsertOneAsync(odmen);
         }
     }
 }

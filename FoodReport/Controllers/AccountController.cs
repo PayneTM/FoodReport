@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using FoodReport.BLL.Interfaces.PasswordHashing;
 using FoodReport.BLL.Interfaces.UserManager;
 using FoodReport.Common.Interfaces;
@@ -8,30 +12,29 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace FoodReport.Controllers
 {
     [AllowAnonymous]
     public class AccountController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IPasswordHasher _passwordHasher;
         private readonly ICustomUserManager _userManager;
-        private readonly IMapper _mapper;
+
         public AccountController(IPasswordHasher passwordHasher, ICustomUserManager userManager, IMapper mapper)
         {
             _passwordHasher = passwordHasher;
             _userManager = userManager;
             _mapper = mapper;
         }
+
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel item)
@@ -48,7 +51,6 @@ namespace FoodReport.Controllers
 
                         return RedirectToAction("Index", "Report");
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -57,13 +59,16 @@ namespace FoodReport.Controllers
                     throw;
                 }
             }
+
             return View(item);
         }
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -77,7 +82,7 @@ namespace FoodReport.Controllers
                         Email = model.Email,
                         Password = _passwordHasher.HashPassword(model.Password)
                     },
-                    role: "User"
+                    "User"
                 );
                 await Authenticate(model.Email, usr.Role);
 
@@ -97,7 +102,8 @@ namespace FoodReport.Controllers
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
-            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }

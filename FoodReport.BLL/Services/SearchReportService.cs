@@ -1,22 +1,23 @@
-﻿using FoodReport.BLL.Interfaces.Search;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces.Search;
 using FoodReport.BLL.Models;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodReport.BLL.Services
 {
     public class SearchReportService : ISearchReport
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public SearchReportService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
+
         public async Task<SearchModel<Report>> Search(string criteria, string value)
         {
             try
@@ -28,9 +29,13 @@ namespace FoodReport.BLL.Services
             catch (Exception ex)
             {
                 throw ex;
-            };
+            }
+
+            ;
         }
-        private async Task<SearchModel<Report>> GetInernalReport(IEnumerable<Report> report, string criteria, string value)
+
+        private async Task<SearchModel<Report>> GetInernalReport(IEnumerable<Report> report, string criteria,
+            string value)
         {
             var model = new SearchModel<Report>();
             switch (criteria.ToLower())
@@ -49,6 +54,7 @@ namespace FoodReport.BLL.Services
                     break;
                 default: throw new Exception(criteria + " - wrong criteria");
             }
+
             if (model.List.Count() == 0) throw new Exception("Nothing found on - " + value);
             return model;
         }

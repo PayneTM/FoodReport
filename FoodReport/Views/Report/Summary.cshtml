@@ -16,45 +16,43 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>
-               Product
-            </th>
-            <th>
-                Count
-            </th>
-            <th>
-               Price
-            </th>
-        </tr>
+    <tr>
+        <th>
+            Product
+        </th>
+        <th>
+            Count
+        </th>
+        <th>
+            Price
+        </th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.List)
-        {
-
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product)
-                </td>
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Count)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-            </tr>
-
-        }
+    @foreach (var item in Model.List)
+    {
         <tr>
-            <th>Total count</th>
-            <th></th>
-            <th>Total price</th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product)
+            </td>
+            <td>
+
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
         </tr>
-        <tr>
-            <td>@Model.TotalCount</td>
-            <td></td>
-            <td>@Model.TotalSum</td>
-        </tr>
+    }
+    <tr>
+        <th>Total count</th>
+        <th></th>
+        <th>Total price</th>
+    </tr>
+    <tr>
+        <td>@Model.TotalCount</td>
+        <td></td>
+        <td>@Model.TotalSum</td>
+    </tr>
     </tbody>
 </table>

@@ -1,17 +1,14 @@
-﻿using FoodReport.DAL.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using FoodReport.DAL.Abstractions;
 
 namespace FoodReport.BLL.Models
 {
-    public class AdminChangeReportStatus: Entity
+    public class AdminChangeReportStatus : Entity
     {
-        [Required]
-        public string Status { get; set; }
+        [Required] public string Status { get; set; }
+
         public string Reason { get; set; }
-        [Required]
-        public string AdminName { get; set; }
+
+        [Required] public string AdminName { get; set; }
     }
 }

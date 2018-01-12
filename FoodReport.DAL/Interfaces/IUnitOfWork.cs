@@ -4,7 +4,7 @@
     {
         IProductRepository Products();
         IReportRepository Reports();
-		IUserRepo Users();
+        IUserRepo Users();
         IRoleRepo Roles();
     }
 }

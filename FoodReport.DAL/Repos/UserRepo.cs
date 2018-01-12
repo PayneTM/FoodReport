@@ -1,10 +1,9 @@
-﻿using FoodReport.DAL.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using FoodReport.DAL.Models;
 using System.Threading.Tasks;
 using FoodReport.DAL.Data;
+using FoodReport.DAL.Interfaces;
+using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -12,7 +11,7 @@ namespace FoodReport.DAL.Repos
 {
     public class UserRepo : IUserRepo
     {
-        private readonly MongoContext _context = null;
+        private readonly MongoContext _context;
 
         public UserRepo(IOptions<Settings> settings)
         {
@@ -24,7 +23,7 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Users
-                        .Find(_ => true).ToListAsync();
+                    .Find(_ => true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -39,8 +38,8 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Users
-                                .Find(filter)
-                                .FirstOrDefaultAsync();
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -54,13 +53,10 @@ namespace FoodReport.DAL.Repos
 
             try
             {
-                 var usr = await _context.Users
+                var usr = await _context.Users
                     .Find(filter)
                     .FirstOrDefaultAsync();
-                if (usr == null)
-                {
-                    await _context.Users.InsertOneAsync(item);
-                }
+                if (usr == null) await _context.Users.InsertOneAsync(item);
             }
             catch (Exception ex)
             {
@@ -72,12 +68,12 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                DeleteResult actionResult
+                var actionResult
                     = await _context.Users.DeleteOneAsync(
                         Builders<User>.Filter.Eq("Id", id));
 
                 return actionResult.IsAcknowledged
-                    && actionResult.DeletedCount > 0;
+                       && actionResult.DeletedCount > 0;
             }
             catch (Exception ex)
             {
@@ -89,13 +85,13 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                ReplaceOneResult actionResult
+                var actionResult
                     = await _context.Users
-                                    .ReplaceOneAsync(n => n.Id.Equals(id)
-                                            , item
-                                            , new UpdateOptions { IsUpsert = true });
+                        .ReplaceOneAsync(n => n.Id.Equals(id)
+                            , item
+                            , new UpdateOptions {IsUpsert = true});
                 return actionResult.IsAcknowledged
-                    && actionResult.ModifiedCount > 0;
+                       && actionResult.ModifiedCount > 0;
             }
             catch (Exception ex)
             {
@@ -110,16 +106,15 @@ namespace FoodReport.DAL.Repos
             try
             {
                 var usr = await _context.Users
-                                .Find(filter)
-                                .FirstOrDefaultAsync();
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
                 //if (usr.Password == password) return usr;
                 return usr;
             }
-            catch 
+            catch
             {
                 return null;
             }
-
         }
     }
 }

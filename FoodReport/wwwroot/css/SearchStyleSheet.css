@@ -20,14 +20,15 @@
 }
 
 select#soflow-color {
-    color: #fff;
-    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
-    background-color: #779126;
-    -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    background-color: #779126;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#779126, #779126 40%, #779126);
     border-radius: 20px;
+    color: #fff;
     padding-left: 15px;
 }
+
 input {
     -webkit-appearance: button;
     -webkit-border-radius: 2px;
@@ -43,9 +44,8 @@ input {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-    input#submit {
-        width: 80px;
-    }
+
+input#submit { width: 80px; }
 
 a.content {
     -webkit-appearance: button;

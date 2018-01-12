@@ -1,8 +1,4 @@
-﻿using FoodReport.DAL.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-
-namespace FoodReport.DAL.Data
+﻿namespace FoodReport.DAL.Data
 {
     public class InitMongoDb
     {

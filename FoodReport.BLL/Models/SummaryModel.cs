@@ -1,7 +1,5 @@
-﻿using FoodReport.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using FoodReport.DAL.Models;
 
 namespace FoodReport.BLL.Models
 {

@@ -1,17 +1,17 @@
-﻿using FoodReport.DAL.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.DAL.Data;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FoodReport.DAL.Repos
 {
     public class ReportRepo : IReportRepository
     {
-        private readonly MongoContext _context = null;
+        private readonly MongoContext _context;
 
         public ReportRepo(IOptions<Settings> settings)
         {
@@ -23,7 +23,7 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Reports
-                        .Find(_ => true).ToListAsync();
+                    .Find(_ => true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -38,8 +38,8 @@ namespace FoodReport.DAL.Repos
             try
             {
                 return await _context.Reports
-                                .Find(filter)
-                                .FirstOrDefaultAsync();
+                    .Find(filter)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -63,12 +63,12 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                DeleteResult actionResult
+                var actionResult
                     = await _context.Reports.DeleteOneAsync(
                         Builders<Report>.Filter.Eq("Id", id));
 
                 return actionResult.IsAcknowledged
-                    && actionResult.DeletedCount > 0;
+                       && actionResult.DeletedCount > 0;
             }
             catch (Exception ex)
             {
@@ -80,13 +80,13 @@ namespace FoodReport.DAL.Repos
         {
             try
             {
-                ReplaceOneResult actionResult
+                var actionResult
                     = await _context.Reports
-                                    .ReplaceOneAsync(n => n.Id.Equals(id)
-                                            , item
-                                            , new UpdateOptions { IsUpsert = true });
+                        .ReplaceOneAsync(n => n.Id.Equals(id)
+                            , item
+                            , new UpdateOptions {IsUpsert = true});
                 return actionResult.IsAcknowledged
-                    && actionResult.ModifiedCount > 0;
+                       && actionResult.ModifiedCount > 0;
             }
             catch (Exception ex)
             {

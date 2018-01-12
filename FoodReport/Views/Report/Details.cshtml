@@ -1,72 +1,71 @@
 ﻿@model FoodReport.Models.Report.EditReportViewModel
 <script src="~/js/ReportDetails.js"></script>
 <link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css">
-<link rel="stylesheet" type="text/css" href="~/css/InfoStyleSheet.css" />
+<link rel="stylesheet" type="text/css" href="~/css/InfoStyleSheet.css"/>
 
 @{
     ViewData["Title"] = "Details";
-    var list = Model.Products.Select(c => new SelectListItem() { Text = c.Name, Value = c.Name })
-       .ToList();
+    var list = Model.Products.Select(c => new SelectListItem {Text = c.Name, Value = c.Name})
+        .ToList();
 }
 <strong>@ViewData["Error"]</strong>
 
 <h2>Report details</h2>
 
 <div>
-    <hr />
+    <hr/>
     <table class="table">
         <thead>
-            <tr>
-                <th>
-                    <label>Product</label>
-                </th>
-                <th>
-                    <label>Count</label>
-                </th>
-                <th>
-                    <label>Price</label>
-                </th>
-            </tr>
+        <tr>
+            <th>
+                <label>Product</label>
+            </th>
+            <th>
+                <label>Count</label>
+            </th>
+            <th>
+                <label>Price</label>
+            </th>
+        </tr>
         </thead>
         <tbody>
-            @if (User.Identity.Name == Model.Report.Owner)
-            {
-                @foreach (var item in Model.Report.List)
-                {
-                    <tr>
-                        <td>
-                                <select class="form-control" asp-for="@item.Product"
-                                        asp-items="@list">
-                                </select>
-</td>
-                        <td>
-                            <input class="form-control" type="text" value=@item.Count />
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" value=@item.Price />
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                @foreach (var item in Model.Report.List)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Product)
-                        </td>
-                        <td>
+        @if (User.Identity.Name == Model.Report.Owner)
+        {
+            @foreach (var item in Model.Report.List)
+             {
+                 <tr>
+                     <td>
+                         <select class="form-control" asp-for="@item.Product"
+                                 asp-items="@list">
+                         </select>
+                     </td>
+                     <td>
+                         <input class="form-control" type="text" value=@item.Count/>
+                     </td>
+                     <td>
+                         <input class="form-control" type="text" value=@item.Price/>
+                     </td>
+                 </tr>
+             }
+        }
+        else
+        {
+            @foreach (var item in Model.Report.List)
+             {
+                 <tr>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.Product)
+                     </td>
+                     <td>
 
-                            @Html.DisplayFor(modelItem => item.Count)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                    </tr>
-                }
-
-            }
+                         @Html.DisplayFor(modelItem => item.Count)
+                     </td>
+                     <td>
+                         @Html.DisplayFor(modelItem => item.Price)
+                     </td>
+                 </tr>
+             }
+        }
         </tbody>
     </table>
 </div>
@@ -92,7 +91,7 @@
     @if (Model.Report.isEdited)
     {
         <dt>
-           Edited
+            Edited
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Report.LastEdited)
@@ -117,22 +116,21 @@
     }
 </dl>
 <div>
-        <strong>Actions: </strong>
-    <br />
+    <strong>Actions: </strong>
+    <br/>
     @if (User.Identity.Name == Model.Report.Owner)
     {
         <a class="btn btn-default" onclick="Save('@Model.Report.Id')">Save</a>
-        <br />
-        <br />
-
+        <br/>
+        <br/>
     }
-    @if(User.IsInRole("Admin"))
+    @if (User.IsInRole("Admin"))
     {
         <a class="btn btn-default" onclick="Approve('@Model.Report.Id', '@User.Identity.Name')">Approve</a>
         <a class="btn btn-default" onclick="RejectForm('@Model.Report.Id', '@User.Identity.Name')">Reject</a>
-    <br />
-<div id="rej"></div>
+        <br/>
+        <div id="rej"></div>
     }
-    <br />
+    <br/>
     <a class="btn btn-default" asp-action="Index">Back to List</a>
 </div>

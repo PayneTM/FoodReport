@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Report>
-<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css" />
+<link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css"/>
 
 <h2>@ViewData["Message"]</h2>
 <h2>@ViewData["Error"]</h2>
-@if(ViewData["Error"] == null)
+@if (ViewData["Error"] == null)
 {
-
-<table class="table">
-    <thead>
+    <table class="table">
+        <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
@@ -20,12 +19,11 @@
             </th>
             <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
 
         @foreach (var item in Model)
         {
-
             <tr>
                 <td>
                     <a asp-action="Search" asp-route-criteria="date" asp-route-value="@item.Date.ToShortDateString()">
@@ -45,13 +43,13 @@
                 </td>
                 <td>
                     <a class="btn btn-default" asp-action="Details" asp-route-id="@item.Id"> Details</a class="btn>
-                    @if(User.IsInRole("Admin"))
+                    @if (User.IsInRole("Admin"))
                     {
                         <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
                     }
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 }

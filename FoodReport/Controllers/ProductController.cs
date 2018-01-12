@@ -1,11 +1,11 @@
-﻿using FoodReport.BLL.Interfaces.Search;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FoodReport.BLL.Interfaces.Search;
 using FoodReport.DAL.Interfaces;
 using FoodReport.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FoodReport.Controllers
 {
@@ -13,8 +13,8 @@ namespace FoodReport.Controllers
     [Route("api/product")]
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ISearchService _searchService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProductController(IUnitOfWork unitOfWork, ISearchService searchService)
         {
@@ -48,18 +48,17 @@ namespace FoodReport.Controllers
         {
             return View();
         }
+
         [HttpPost("create")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Product item)
         {
             if (ModelState.IsValid)
-            {
                 try
                 {
-                    if (await _unitOfWork.Products().GetAll() is List<Product> products && products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
-                    {
+                    if (await _unitOfWork.Products().GetAll() is List<Product> products &&
+                        products.Exists(x => x.Name == item.Name && x.Provider == item.Provider))
                         return RedirectToAction(nameof(Create));
-                    }
                     await _unitOfWork.Products().Add(item);
                 }
                 catch (Exception e)
@@ -67,62 +66,45 @@ namespace FoodReport.Controllers
                     Console.WriteLine(e);
                     throw;
                 }
-            }
+
             return RedirectToAction(nameof(Index));
         }
 
         [Route("edit/{id}")]
         [Authorize(Roles = "Admin")]
-
         public async Task<IActionResult> Edit(string id)
 
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var toEdit = await _unitOfWork.Products().Get(id);
-            if (toEdit == null)
-            {
-                return NotFound();
-            }
+            if (toEdit == null) return NotFound();
             return View(toEdit);
         }
 
         [HttpPost("edit/{id}")]
         [Authorize(Roles = "Admin")]
-
         public IActionResult Edit(Product item)
         {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Products().Update(item.Id, item);
-            }
+            if (ModelState.IsValid) _unitOfWork.Products().Update(item.Id, item);
             return RedirectToAction(nameof(Index));
         }
 
         [Route("delete")]
         [Authorize(Roles = "Admin")]
-
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var toDelete = await _unitOfWork.Products().Get(id);
-            if (toDelete == null)
-            {
-                return NotFound();
-            }
+            if (toDelete == null) return NotFound();
 
             return View(toDelete);
         }
 
         // POST: TodoListElements/Delete/5
-        [HttpPost("delete"), ActionName("Delete")]
+        [HttpPost("delete")]
+        [ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

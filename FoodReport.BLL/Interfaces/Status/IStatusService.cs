@@ -1,8 +1,6 @@
-﻿using FoodReport.BLL.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FoodReport.BLL.Models;
 
 namespace FoodReport.BLL.Interfaces.Status
 {

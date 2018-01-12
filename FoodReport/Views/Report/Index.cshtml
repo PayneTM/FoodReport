@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<FoodReport.DAL.Models.Report>
 <link rel="stylesheet" type="text/css" href="~/css/TableStyleSheet.css">
-<link rel="stylesheet" type="text/css" href="~/css/SearchStyleSheet.css" />
+<link rel="stylesheet" type="text/css" href="~/css/SearchStyleSheet.css"/>
 
 
 @{
@@ -27,52 +27,52 @@
         <option>Date</option>
         <option>Status</option>
     </select>
-    <input type="text" name="value" />
+    <input type="text" name="value"/>
     <input type="submit" value="Search" class="btn btn-default"/>
 </form>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Owner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>Actions</th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Owner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>Actions</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <a asp-action="Search" asp-route-criteria="date" asp-route-value="@item.Date.ToShortDateString()">
-                        @item.Date.ToShortDateString()
-                    </a>
-                </td>
-                <td>
-                    <a asp-action="Search" asp-route-criteria="owner" asp-route-value="@item.Owner">
-                        @item.Owner
-                    </a>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <a asp-action="Search" asp-route-criteria="date" asp-route-value="@item.Date.ToShortDateString()">
+                    @item.Date.ToShortDateString()
+                </a>
+            </td>
+            <td>
+                <a asp-action="Search" asp-route-criteria="owner" asp-route-value="@item.Owner">
+                    @item.Owner
+                </a>
 
-                </td>
-                <td>
-                    <a asp-action="Search" asp-route-criteria="status" asp-route-value="@item.Status">
-                        @item.Status
-                    </a>
-                </td>
-                <td>
-                    <a class="btn btn-default" asp-action="Details" asp-route-id="@item.Id"> Details </a> 
-            @if (User.IsInRole("Admin"))
-                    {
-                        <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
-                    }
-                </td>
-            </tr>
-        }
+            </td>
+            <td>
+                <a asp-action="Search" asp-route-criteria="status" asp-route-value="@item.Status">
+                    @item.Status
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-default" asp-action="Details" asp-route-id="@item.Id"> Details </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-default" asp-action="Delete" asp-route-id="@item.Id"> Delete </a>
+                }
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
