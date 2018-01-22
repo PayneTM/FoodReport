@@ -29,8 +29,6 @@ namespace FoodReport.BLL.Services
             {
                 throw ex;
             }
-
-            ;
         }
 
         private async Task<SearchModel<Product>> GetInernalProduct(IEnumerable<Product> product, string criteria,
@@ -50,7 +48,7 @@ namespace FoodReport.BLL.Services
                 default: throw new Exception(criteria + " - wrong criteria");
             }
 
-            if (model.List.Count() == 0) throw new Exception("Nothing found on - " + value);
+            if (!model.List.Any()) throw new Exception("Nothing found on - " + value);
             return model;
         }
     }
