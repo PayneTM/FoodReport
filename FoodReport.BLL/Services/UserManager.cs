@@ -20,7 +20,7 @@ namespace FoodReport.BLL.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<IUser> Create(IUser user, string role)
+        public async Task<User> Create(User user, string role)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public Task Edit(IUser user)
+        public Task Edit(User user)
         {
             throw new NotImplementedException();
         }
@@ -57,7 +57,7 @@ namespace FoodReport.BLL.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IUser> GetById(string id)
+        public async Task<User> GetById(string id)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> GetByName(string name)
+        public async Task<User> GetByName(string name)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace FoodReport.BLL.Services
             }
         }
 
-        public async Task<IUser> PasswordValidate(IUser user)
+        public async Task<User> PasswordValidate(User user)
         {
             try
             {

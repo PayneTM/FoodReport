@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using FoodReport.Common.Interfaces;
 
 namespace FoodReport.BLL.Interfaces.UserManager
 {
-    public interface IUserManager<TUser>
+    public interface IUserManager<TUser> where TUser : IUser
     {
         Task<TUser> Create(TUser user, string role);
         Task Edit(TUser user);
